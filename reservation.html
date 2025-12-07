@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相談・見学予約 | 児童発達支援 pocopoco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
+        h1, h2 { font-family: 'Zen Maru Gothic', sans-serif; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ヘッダー -->
+    <header class="bg-white/90 backdrop-blur-sm fixed top-0 w-full z-40 shadow-sm border-b border-stone-200">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-brand-main text-xl tracking-wider font-maru hover:opacity-80 transition">
+                <img src="images/logo.png" alt="pocopoco" class="h-9">
+            </a>
+            <a href="index.html" class="text-sm text-gray-500 hover:text-brand-main transition">
+                <i class="fas fa-arrow-left mr-1"></i>TOPへ戻る
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-20 pb-12 px-4 max-w-md mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-brand-main mb-2">相談・見学予約</h1>
+            <p class="text-sm text-gray-600">
+                以下のフォームよりお気軽にお問い合わせください。<br>
+                2営業日以内に担当者よりご連絡いたします。
+            </p>
+        </div>
+
+        <!-- フォームエリア -->
+        <div id="formContainer">
+            <form id="reservationForm" class="bg-white p-6 rounded-xl shadow-md space-y-6">
+                
+                <!-- 保護者氏名 -->
+                <div>
+                    <label for="parentName" class="block text-sm font-bold text-gray-700 mb-1">保護者様のお名前 <span class="text-red-500 text-xs">*必須</span></label>
+                    <input type="text" id="parentName" name="parentName" required placeholder="例：山田 花子" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                </div>
+
+                <!-- お子様氏名 -->
+                <div>
+                    <label for="childName" class="block text-sm font-bold text-gray-700 mb-1">お子さまのお名前 <span class="text-gray-400 text-xs">(任意)</span></label>
+                    <input type="text" id="childName" name="childName" placeholder="例：山田 太郎" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                </div>
+
+                <!-- 年齢 -->
+                <div>
+                    <label for="childAge" class="block text-sm font-bold text-gray-700 mb-1">お子さまの年齢 <span class="text-gray-400 text-xs">(任意)</span></label>
+                    <select id="childAge" name="childAge" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                        <option value="">選択してください</option>
+                        <option value="0歳">0歳</option>
+                        <option value="1歳">1歳</option>
+                        <option value="2歳">2歳</option>
+                        <option value="3歳 (年少)">3歳 (年少)</option>
+                        <option value="4歳 (年中)">4歳 (年中)</option>
+                        <option value="5歳 (年長)">5歳 (年長)</option>
+                        <option value="6歳 (就学前)">6歳 (就学前)</option>
+                    </select>
+                </div>
+
+                <!-- メールアドレス -->
+                <div>
+                    <label for="email" class="block text-sm font-bold text-gray-700 mb-1">メールアドレス <span class="text-red-500 text-xs">*必須</span></label>
+                    <input type="email" id="email" name="email" required placeholder="example@email.com" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                </div>
+
+                <!-- 電話番号 -->
+                <div>
+                    <label for="tel" class="block text-sm font-bold text-gray-700 mb-1">電話番号 <span class="text-red-500 text-xs">*必須</span></label>
+                    <input type="tel" id="tel" name="tel" required placeholder="090-0000-0000" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                </div>
+
+                <!-- 受給者証の有無 -->
+                <div>
+                    <label for="certificate" class="block text-sm font-bold text-gray-700 mb-1">受給者証の有無 <span class="text-red-500 text-xs">*必須</span></label>
+                    <select id="certificate" name="certificate" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                        <option value="">選択してください</option>
+                        <option value="持っている">持っている</option>
+                        <option value="申請手続き中">申請手続き中</option>
+                        <option value="持っていない">持っていない</option>
+                    </select>
+                </div>
+
+                <!-- ご希望内容 -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">お問い合わせ内容 <span class="text-red-500 text-xs">*必須</span></label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="type" value="見学希望" class="w-4 h-4 text-brand-cta bg-gray-100 border-gray-300 rounded focus:ring-brand-cta">
+                            <span class="ml-2 text-sm text-gray-600">施設の見学をしたい</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="type" value="面談希望" class="w-4 h-4 text-brand-cta bg-gray-100 border-gray-300 rounded focus:ring-brand-cta">
+                            <span class="ml-2 text-sm text-gray-600">個別面談・相談をしたい</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="type" value="受給者証について" class="w-4 h-4 text-brand-cta bg-gray-100 border-gray-300 rounded focus:ring-brand-cta">
+                            <span class="ml-2 text-sm text-gray-600">受給者証について聞きたい</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 希望日時 -->
+                <div>
+                    <label for="message" class="block text-sm font-bold text-gray-700 mb-1">ご希望の日時・その他ご質問など</label>
+                    <textarea id="message" name="message" rows="4" placeholder="（例）平日の午前中を希望します。兄弟の同席は可能でしょうか？" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3"></textarea>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" id="submitBtn" class="w-full text-white bg-brand-cta hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-bold rounded-full text-lg px-5 py-4 text-center shadow-lg transition transform hover:-translate-y-1">
+                        送信する <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                    <p class="text-center text-xs text-gray-400 mt-3">※個人情報は厳重に管理し、お問い合わせ対応以外には使用いたしません。</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- 送信完了メッセージ (初期は非表示) -->
+        <div id="successMessage" class="hidden bg-white p-8 rounded-xl shadow-md text-center">
+            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-3xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-brand-main mb-2">送信完了しました</h2>
+            <p class="text-sm text-gray-600 mb-6">
+                お問い合わせありがとうございます。<br>
+                内容を確認次第、担当者よりご連絡いたします。
+            </p>
+            <a href="index.html" class="block w-full bg-brand-main text-white font-bold py-3 rounded-full hover:bg-brown-700 transition">
+                TOPへ戻る
+            </a>
+        </div>
+
+        <div class="mt-8 text-center" id="contactOptions">
+
+            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+
+                <p class="text-sm font-bold text-gray-600 mb-3">
+
+                    <i class="fas fa-exclamation-circle text-brand-cta mr-1"></i>お急ぎの場合はお電話ください
+
+                </p>
+
+                <a href="tel:042-306-7126" class="inline-flex items-center text-brand-main hover:text-brand-cta transition pb-0.5 group">
+
+                    <i class="fas fa-phone-alt mr-2 text-xl group-hover:rotate-12 transition-transform"></i>
+
+                    <span class="text-2xl font-bold tracking-wider font-sans">042-306-7126</span>
+
+                </a>
+
+                <p class="text-xs text-gray-400 mt-2">（受付時間：平日 9:00〜17:00）</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 【重要】ここにGASのウェブアプリURLを貼り付けてください
+        // 例: const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxO7NAXqG1VUdMH9teFHRjz7Z8zyfyG7FC7Hm2NBO4e6vrA8w6S2GU1SGe_4ll68pU/exec"; 
+
+        const form = document.getElementById('reservationForm');
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // URLが設定されていない場合のアラート
+            if (!SCRIPT_URL) {
+                alert('システム管理者へ連絡：Google Apps ScriptのURLが設定されていません。');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 送信中...';
+
+            // データの整形
+            const formData = new FormData(form);
+            const data = {};
+            
+            // チェックボックスの処理
+            const checkedTypes = [];
+            document.querySelectorAll('input[name="type"]:checked').forEach(cb => checkedTypes.push(cb.value));
+            
+            data.parentName = formData.get('parentName');
+            data.childName = formData.get('childName');
+            data.childAge = formData.get('childAge');
+            data.email = formData.get('email');
+            data.tel = formData.get('tel');
+            data.certificate = formData.get('certificate');
+            data.message = formData.get('message');
+            data.requestType = checkedTypes.join(', ');
+            data.formType = 'reservation';
+
+            // GASへ送信
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // CORSエラー回避のためno-corsモードを使用
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // no-corsモードではレスポンスの中身が見れないため、エラーが起きなければ成功とみなす
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('contactOptions').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+                window.scrollTo(0, 0);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('送信に失敗しました。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+    </script>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs mt-12">
+        <div class="mb-4 space-x-4">
+            <a href="index.html" class="hover:text-white transition">トップページ</a>
+            <span class="text-gray-600">|</span>
+            <a href="recruit.html" class="hover:text-white transition">採用情報</a>
+            <span class="text-gray-600">|</span>
+            <a href="sitter.html" class="hover:text-white transition">ベビーシッター</a>
+            <span class="text-gray-600">|</span>
+            <a href="program.html" class="hover:text-white transition">支援プログラム・自己評価</a>
+        </div>
+        <p class="mb-2">児童発達支援 pocopoco</p>
+        <p class="mb-4">〒183-0052　東京都府中市新町1丁目71番地７</p>
+        <p class="mb-1">運営会社：株式会社INU</p>
+        <p>&copy; 2025 pocopoco All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+

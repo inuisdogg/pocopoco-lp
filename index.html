@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>児童発達支援 pocopoco | 木育×専門職チーム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/config.js"></script>
+</head>
+<body class="antialiased leading-relaxed">
+
+    <header class="bg-white/90 backdrop-blur-sm fixed top-0 w-full z-40 shadow-sm border-b border-stone-200">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-brand-main text-xl tracking-wider font-maru hover:opacity-80 transition">
+                <img src="images/logo.png" alt="pocopoco" class="h-9">
+            </a>
+            <div class="flex gap-2">
+                <a href="recruit.html" class="text-xs font-bold px-2 py-2 text-brand-main hover:bg-gray-100 rounded transition hidden md:block">
+                    <i class="fas fa-user-plus mr-1"></i>採用
+                </a>
+                <a href="reservation.html" class="bg-brand-cta text-white text-xs font-bold px-3 py-2 rounded-full shadow-md hover:bg-orange-600 transition hidden md:block">
+                    <i class="fas fa-envelope mr-1"></i>無料相談
+                </a>
+                <!-- ハンバーガーメニューボタン -->
+                <button id="menuToggle" class="md:hidden text-gray-600 hover:text-brand-main transition focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- ハンバーガーメニュー -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200 shadow-lg">
+            <div class="max-w-md mx-auto px-4 py-4 space-y-3">
+                <a href="reservation.html" class="block bg-brand-cta text-white text-sm font-bold px-4 py-3 rounded-lg shadow-md hover:bg-orange-600 transition text-center">
+                    <i class="fas fa-envelope mr-2"></i>無料相談
+                </a>
+                <a href="recruit.html" class="block text-gray-700 text-sm font-bold px-4 py-3 rounded-lg hover:bg-gray-50 transition text-center border border-gray-200">
+                    <i class="fas fa-briefcase mr-2"></i>採用情報
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-bg min-h-[90vh] flex items-center justify-center pt-16 relative">
+        <div class="max-w-md w-full px-6 py-12 text-center">
+            <p class="text-brand-main font-bold mb-4 tracking-widest bg-white/80 inline-block px-3 py-1 rounded-full text-sm">
+                0歳〜6歳対象・児童発達支援
+            </p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 leading-snug mb-6">
+                <span class="text-brand-accent">木育</span> × <span class="text-brand-main">専門職チーム</span>で<br>
+                “その子らしさ”を<br>
+                もっと伸ばす。
+            </h1>
+            <p class="text-gray-600 mb-8 font-medium bg-white/60 p-2 rounded-lg">
+                理学療法士・言語聴覚士・音楽教員在籍。<br>
+                木の温もりの中で、遊びながら発達をサポート。
+            </p>
+            
+            <div class="space-y-3">
+                <a href="reservation.html" class="block w-full bg-brand-cta text-white font-bold text-lg py-4 rounded-full shadow-lg hover:bg-orange-600 transition transform hover:-translate-y-1">
+                    無料面談を予約する
+                    <i class="fas fa-chevron-right ml-2"></i>
+                </a>
+                <p class="text-xs text-gray-500">※受給者証をお持ちでない方もご相談可能です</p>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-0 w-full overflow-hidden leading-none">
+            <svg class="relative block w-[calc(100%+1.3px)] h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="fill-[#FDFCF0]"></path>
+            </svg>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 max-w-md mx-auto">
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-2">
+            <i class="fas fa-users mr-2 text-brand-accent"></i><img src="images/logo.png" alt="pocopoco" class="inline-block h-12 align-middle mx-1">の強み
+        </h2>
+        <p class="text-center text-sm text-gray-500 mb-8">
+            福祉・保育のプロが集結した<br>専門職チームによる支援
+        </p>
+
+        <div class="grid gap-4">
+            <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-brand-accent">
+                <h3 class="font-bold text-lg mb-3 flex items-center">
+                    <span class="bg-brand-accent text-white text-xs px-2 py-1 rounded mr-2">在籍スタッフ</span>
+                    多様な視点でサポート
+                </h3>
+                <ul class="space-y-2 text-sm font-medium">
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>理学療法士 (PT) <span class="text-xs text-gray-400 ml-1">体の動きの専門家</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>言語聴覚士 (ST) <span class="text-xs text-gray-400 ml-1">ことばの専門家</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>音楽教員 <span class="text-xs text-gray-400 ml-1">音と表現の専門家</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>保育士 <span class="text-xs text-gray-400 ml-1">育ちの専門家</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>おもちゃコンサルタント<span class="text-xs text-gray-400 ml-1">遊びの専門家</li>
+                </ul>
+            </div>
+
+            <div class="bg-brand-main/10 p-5 rounded-xl">
+                <p class="text-sm leading-relaxed">
+                    <strong>「運動」「ことば」「心」</strong>など、お子さまの発達の悩みはひとつではありません。
+                    <img src="images/logo.png" alt="pocopoco" class="inline-block h-6 align-middle mx-1">では、各分野のプロがチームを組み、<strong>多角的な視点</strong>でお子さまの「できた！」を引き出します。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-10 px-4 bg-white">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-xl font-bold text-center text-gray-700 mb-6">
+                <span class="border-b-4 border-yellow-200">児童発達支援とは？</span>
+            </h2>
+            <div class="space-y-4 text-sm text-gray-600">
+                <p>
+                    発達に少し心配のある<strong>0歳〜6歳（未就学児）</strong>のお子さまが、日常生活における基本動作や知識技能を習得し、集団生活に適応できるよう支援するための福祉サービスです。
+                </p>
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-start">
+                        <i class="fas fa-circle text-[8px] text-brand-cta mt-2 mr-2"></i>
+                        <span>保育園・幼稚園に通いながらの併用利用も可能です。</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-circle text-[8px] text-brand-cta mt-2 mr-2"></i>
+                        <span>ご利用には市区町村が発行する「受給者証」が必要です（取得サポートあり）。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 max-w-md mx-auto relative overflow-hidden">
+        <div class="absolute top-0 right-0 opacity-10 -z-10 text-9xl text-brand-main rotate-12">
+            <i class="fas fa-tree"></i>
+        </div>
+
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-8">
+            <img src="images/logo.png" alt="pocopoco" class="inline-block h-12 align-middle mx-1">の「木育療育」
+        </h2>
+
+        <div class="grid gap-6">
+            <div class="text-center">
+                <div class="w-full h-48 bg-gray-200 rounded-2xl mb-4 overflow-hidden relative group">
+                    <img src="images/mokuiku1.jpg" alt="木の空間イメージ" class="w-full h-full object-cover">
+                </div>
+                <h3 class="text-lg font-bold text-brand-main mb-2">五感を育てる「木の空間」</h3>
+                <p class="text-sm text-gray-600">
+                    木をベースとした環境設定。木の香り、手触り、温かみが、お子さまの情緒を安定させ、五感を豊かに刺激します。
+                </p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-full h-48 bg-gray-200 rounded-2xl mb-4 overflow-hidden relative">
+                    <img src="images/mokuiku2.jpg" alt="おもちゃイメージ" class="w-full h-full object-cover">
+                </div>
+                <h3 class="text-lg font-bold text-brand-main mb-2">厳選された良質なおもちゃ</h3>
+                <p class="text-sm text-gray-600">
+                    おもちゃコンサルタントが選んだ、発達を促す「遊びの道具」が揃っています。ただ遊ぶだけでなく、そこには成長への仕掛けがあります。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 bg-orange-50/50">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-center text-gray-700 mb-2">
+                こんなお悩みありませんか？
+            </h2>
+            <p class="text-center text-xs text-gray-500 mb-8">専門職チームが一人ひとりに合わせてアプローチします</p>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-brand-cta/10 p-3 font-bold text-brand-main flex items-center">
+                        <i class="fas fa-comment-dots mr-2 text-xl"></i>
+                        言葉が出るのがゆっくり...
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">言語聴覚士(ST)</span>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">木育</span>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">絵本</span>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            「言葉」が出る前段階である「伝えたい」という意欲を引き出します。 言語聴覚士（ST）が、お子さまの視線や興味に合わせて絵本の読み聞かせや手遊びを展開。 「自分の気持ちが伝わった！」という喜びを積み重ね、コミュニケーションの土台となる語彙や発語を自然に促します。
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-brand-cta/10 p-3 font-bold text-brand-main flex items-center">
+                        <i class="fas fa-shapes mr-2 text-xl"></i>
+                        手先が不器用・姿勢が悪い
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">理学療法士(PT)</span>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">感覚統合</span>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            体幹を使った遊びや、積み木などの微細運動を通して、身体の使い方を楽しく学びます。 理学療法士（PT）が、お子さまの発達段階に合わせた運動遊びを提供し、姿勢の安定や手先の器用さを段階的に育んでいきます。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-brand-cta/10 p-3 font-bold text-brand-main flex items-center">
+                        <i class="fas fa-volume-up mr-2 text-xl"></i>
+                        大きな音が苦手・敏感
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">音楽教員</span>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">感覚調整</span>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            感覚過敏なお子さまにとって、木の香りと温もりに包まれた空間は、それだけで心が安らぐ「安全基地」になります。 音楽教員が奏でる優しい楽器の音色やリズム遊びを通じて、過敏な感覚を少しずつ和らげたり、不安な気持ちをコントロールしたりする方法を一緒に見つけていきます。
+                        </p>
+                    </div>
+                </div>
+                
+                 <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-brand-cta/10 p-3 font-bold text-brand-main flex items-center">
+                        <i class="fas fa-users mr-2 text-xl"></i>
+                        お友達とうまく遊べない
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">保育士</span>
+                            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">小集団療育</span>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            お友達とのトラブルは「関わり方がわからない」サインです。 少人数の小集団クラスで、保育士が「かして」「いいよ」などの言葉がけや、相手の気持ちを代弁して仲立ちします。 失敗しても大丈夫な安心できる環境で、ルールのある遊びや順番を守る経験を重ね、集団生活への自信を育みます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <a href="reservation.html" class="inline-block bg-brand-main text-white font-bold py-3 px-8 rounded-full shadow hover:bg-brown-700 transition">
+                    うちの子の場合は？相談してみる
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 max-w-md mx-auto">
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-8">
+            ご利用までの流れ
+        </h2>
+        <div class="space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-brand-accent p-5">
+                <div class="flex items-start gap-3">
+                    <span class="bg-brand-accent text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">1</span>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2">お問い合わせ・面談予約</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">まずはLINE、お電話、またはフォームよりご連絡ください。見学の日程を調整します。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-brand-accent p-5">
+                <div class="flex items-start gap-3">
+                    <span class="bg-brand-accent text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">2</span>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2">初回相談・見学</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">お子さまと一緒に施設へお越しください。お悩みを伺い、施設の雰囲気を感じていただきます。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-brand-accent p-5">
+                <div class="flex items-start gap-3">
+                    <span class="bg-brand-accent text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">3</span>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2">受給者証の申請</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">お住まいの自治体で受給者証の申請を行います。手続きの仕方はスタッフが丁寧にサポートします。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-brand-accent p-5">
+                <div class="flex items-start gap-3">
+                    <span class="bg-brand-accent text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">4</span>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2">個別支援計画の作成・契約</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">お子さまの目標に合わせた計画を作成し、重要事項の説明後、契約を結びます。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-brand-main/10 rounded-xl shadow-sm border-l-4 border-brand-main p-5">
+                <div class="flex items-start gap-3">
+                    <span class="bg-brand-main text-white text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">Go</span>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2 text-brand-main">利用開始</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed"><img src="images/logo.png" alt="pocopoco" class="inline-block h-6 align-middle mx-1">での楽しい時間がスタート！定期的に面談を行い、成長を共有します。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 料金について -->
+    <section class="py-12 px-4 bg-yellow-50">
+        <div class="max-w-md mx-auto text-center">
+            <h2 class="text-2xl font-bold text-brand-main mb-6">ご利用料金について</h2>
+            
+            <div class="bg-white p-6 rounded-xl shadow-md border-2 border-brand-accent border-dashed">
+                <p class="text-sm font-bold text-gray-500 mb-2">国制度による発達支援の無償化により</p>
+                <div class="text-3xl font-bold text-brand-cta mb-2">
+                    利用者負担 0円
+                </div>
+                <div class="inline-block bg-orange-100 text-brand-cta text-xs font-bold px-3 py-1 rounded-full mb-4">
+                    満3歳になって初めての4月1日から3年間
+                </div>
+                
+                <hr class="border-gray-200 my-4">
+                
+                <div class="text-left text-sm text-gray-600 space-y-4">
+                    <div>
+                        <p class="font-bold text-brand-main mb-1">
+                            <i class="fas fa-child text-brand-accent mr-1"></i>
+                            0〜2歳のお子さま
+                        </p>
+                        <p class="text-xs leading-relaxed">
+                            0〜2歳のお子さまも、自治体の助成により<strong>無償化の対象</strong>となります。<br>
+                            <span class="text-gray-400">※詳細はお住まいの自治体により異なる場合がありますので、面談時にご説明いたします。</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-brand-main mb-1">
+                            <i class="fas fa-cookie-bite text-brand-accent mr-1"></i>
+                            その他費用
+                        </p>
+                        <p class="text-xs leading-relaxed">
+                            pocopocoでは、おやつ代や教材費などの別途徴収は基本的にありません。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4 text-xs text-gray-500">
+                詳しくは面談時にわかりやすくご説明いたします。
+            </p>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 max-w-md mx-auto">
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-8">施設の様子</h2>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+                <img src="images/shisetsu1.main.jpg" alt="メインルーム" class="w-full rounded-lg shadow-sm">
+                <p class="text-xs text-center font-bold text-gray-600">木の香るプレイルーム</p>
+            </div>
+            <div class="space-y-1">
+                <img src="images/shisetsu2.koshitsu.JPG" alt="個別室" class="w-full rounded-lg shadow-sm">
+                <p class="text-xs text-center font-bold text-gray-600">集中できる個別室</p>
+            </div>
+            <div class="space-y-1">
+                <img src="images/shisetsu3.kankaku.jpg" alt="感覚遊具" class="w-full rounded-lg shadow-sm">
+                <p class="text-xs text-center font-bold text-gray-600">感覚を育てる遊具</p>
+            </div>
+            <div class="space-y-1">
+                <img src="images/shisetsu4.omocha.jpg" alt="おもちゃ棚" class="w-full rounded-lg shadow-sm">
+                <p class="text-xs text-center font-bold text-gray-600">こだわりの木製玩具</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. 専門職スタッフ紹介 -->
+    <section class="py-12 px-4 bg-brand-light">
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-8">
+            スタッフ紹介
+        </h2>
+        
+        <div class="max-w-md mx-auto space-y-4">
+            <!-- Staff 1: SAKAI -->
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-start gap-4">
+                <img src="images/staff-sakai.jpg" alt="SAKAI先生" class="w-16 h-16 rounded-full object-cover border-2 border-brand-accent">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="font-bold text-lg">SAKAI 先生</span>
+                        <span class="text-[10px] bg-brand-main text-white px-2 py-0.5 rounded-full">児発管・理学療法士</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-normal">
+                        「できた！」をたくさん引き出せるような教室を目指します！心配事や悩み事があればいつでもお声がけください☆
+                    </p>
+                </div>
+            </div>
+
+            <!-- Staff 2: OISHI -->
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-start gap-4">
+                <img src="images/staff-oishi.jpg" alt="OISHI先生" class="w-16 h-16 rounded-full object-cover border-2 border-brand-accent">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="font-bold text-lg">OISHI 先生</span>
+                        <span class="text-[10px] bg-brand-main text-white px-2 py-0.5 rounded-full">言語聴覚士</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-normal">
+                        言葉の遅れや発音の悩みなど、お気軽にご相談ください。お子さまの「伝えたい」気持ちを大切に、楽しくコミュニケーションの土台を育んでいきます。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Staff 3: NAGAO -->
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-start gap-4">
+                <img src="images/staff-nagao.jpg" alt="NAGAO先生" class="w-16 h-16 rounded-full object-cover border-2 border-brand-accent">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="font-bold text-lg">NAGAO 先生</span>
+                        <span class="text-[10px] bg-brand-main text-white px-2 py-0.5 rounded-full">音楽教員</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-normal">
+                        音楽のリズムやメロディを通じて、心と体の成長をサポートします。楽器に触れたり歌ったり、音のある空間を一緒に楽しみましょう！
+                    </p>
+                </div>
+            </div>
+
+            <!-- Staff 4: MAKI -->
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-start gap-4">
+                <img src="images/staff-maki.jpg" alt="MAKI先生" class="w-16 h-16 rounded-full object-cover border-2 border-brand-accent">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="font-bold text-lg">MAKI 先生</span>
+                        <span class="text-[10px] bg-brand-main text-white px-2 py-0.5 rounded-full">おもちゃコンサルタント</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-normal">
+                        みんなと沢山遊べるのを楽しみにしています♪ 厳選した木のおもちゃを通じて、お子さまの好奇心を広げるお手伝いをします。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 max-w-md mx-auto">
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-8">よくある質問</h2>
+        
+        <div class="space-y-3">
+            <!-- NEW: 放課後等デイサービスの開所予定 -->
+            <details class="group bg-white rounded-lg border border-gray-200 shadow-sm">
+                <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-gray-700">
+                    <span>Q. 放課後等デイサービスの開所予定はありますか？</span>
+                    <i class="fas fa-chevron-down text-brand-cta transition group-open:rotate-180"></i>
+                </summary>
+                <div class="p-4 pt-0 text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
+                    <p class="mb-3">
+                        はい、現在 **2026年度中の開所** を目指して準備を進めています。
+                        開所時期が決まり次第、優先的に情報をご案内いたします。
+                    </p>
+                    <div class="text-center">
+                        <a href="https://lin.ee/bN5scT0" target="_blank" class="inline-flex items-center bg-[#06C755] text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-green-600 transition">
+                            <i class="fab fa-line mr-2"></i>LINEを追加して案内を待つ
+                        </a>
+                    </div>
+                </div>
+            </details>
+            <details class="group bg-white rounded-lg border border-gray-200 shadow-sm">
+                <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-gray-700">
+                    <span>Q. 受給者証を持っていませんが相談できますか？</span>
+                    <i class="fas fa-chevron-down text-brand-cta transition group-open:rotate-180"></i>
+                </summary>
+                <div class="p-4 pt-0 text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
+                    はい、もちろんです。受給者証の取得方法からスタッフが丁寧にサポートいたしますので、まずはお気軽にご見学ください。
+                </div>
+            </details>
+            <details class="group bg-white rounded-lg border border-gray-200 shadow-sm">
+                <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-gray-700">
+                    <span>Q. 保育園に通っていますが利用できますか？</span>
+                    <i class="fas fa-chevron-down text-brand-cta transition group-open:rotate-180"></i>
+                </summary>
+                <div class="p-4 pt-0 text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
+                    はい、併用可能です。保育園終了後や、保育園がお休みの日にご利用される方が多くいらっしゃいます。
+                </div>
+            </details>
+
+            <details class="group bg-white rounded-lg border border-gray-200 shadow-sm">
+                <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-gray-700">
+                    <span>Q. 週に何回通えますか？</span>
+                    <i class="fas fa-chevron-down text-brand-cta transition group-open:rotate-180"></i>
+                </summary>
+                <div class="p-4 pt-0 text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
+                    受給者証に記載された支給日数の範囲内でご利用いただけます。お子さまの体力や生活リズムに合わせて、週1回〜週3回など柔軟に調整可能です。
+                </div>
+            </details>
+
+            <details class="group bg-white rounded-lg border border-gray-200 shadow-sm">
+                <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-gray-700">
+                    <span>Q. 親の同席は必要ですか？</span>
+                    <i class="fas fa-chevron-down text-brand-cta transition group-open:rotate-180"></i>
+                </summary>
+                <div class="p-4 pt-0 text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
+                    基本的には母子分離（お子さまのみのお預かり）ですが、慣れるまでは同席いただくことも可能です。また、定期的に面談の時間を設け、様子をお伝えしています。
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- 11. 最後のCTA (SNS誘導強化版) -->
+
+    <section id="contact" class="py-16 px-4 bg-brand-main text-white text-center">
+
+        <div class="max-w-md mx-auto">
+
+            <h2 class="text-2xl font-bold mb-2 font-maru">
+
+                まずは無料相談・見学から
+
+            </h2>
+
+            <p class="text-sm mb-8 opacity-90">
+
+                お子さまのことで気になること、<br>
+
+                どんな小さなことでもお話しください。<br>
+
+                スタッフ一同、お待ちしております。
+
+            </p>
+
+            <div class="space-y-3 mb-10">
+
+                <!-- 1. 予約フォームボタン (一番上に移動・最重要) -->
+
+                <a href="reservation.html" class="group block w-full bg-white text-brand-main font-bold py-5 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-4 border border-white/30 hover:border-white/50 transform hover:-translate-y-0.5">
+
+                    <div class="flex-shrink-0 w-12 h-12 bg-brand-cta/10 rounded-xl flex items-center justify-center group-hover:bg-brand-cta/20 transition-colors">
+
+                        <i class="fas fa-envelope text-brand-cta text-xl"></i>
+
+                    </div>
+
+                    <div class="flex-1 text-left">
+
+                        <div class="text-xs text-gray-500 font-normal mb-0.5">24時間受付中</div>
+
+                        <div class="text-base font-bold">WEBフォームで予約</div>
+
+                    </div>
+
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-brand-cta group-hover:translate-x-1 transition-all"></i>
+
+                </a>
+
+                <!-- 2. LINE公式ボタン (その下) -->
+
+                <a href="https://lin.ee/bN5scT0" target="_blank" class="group block w-full bg-white text-[#06C755] font-bold py-5 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-4 border border-white/30 hover:border-white/50 transform hover:-translate-y-0.5">
+
+                    <div class="flex-shrink-0 w-12 h-12 bg-[#06C755]/10 rounded-xl flex items-center justify-center group-hover:bg-[#06C755]/20 transition-colors">
+
+                        <i class="fab fa-line text-[#06C755] text-2xl"></i>
+
+                    </div>
+
+                    <div class="flex-1 text-left">
+
+                        <div class="text-xs text-gray-500 font-normal mb-0.5">気軽にチャットで相談！</div>
+
+                        <div class="text-base font-bold">LINEで問い合わせる</div>
+
+                    </div>
+
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-[#06C755] group-hover:translate-x-1 transition-all"></i>
+
+                </a>
+
+                <!-- 3. 電話 (ボタン形式をやめて控えめに表示) -->
+
+                <div class="pt-4">
+
+                    <p class="text-xs opacity-70 mb-1">お急ぎの方はお電話でも承ります</p>
+
+                    <a href="tel:042-306-7126" class="inline-flex items-center text-white/90 hover:text-white border-b border-white/30 hover:border-white transition pb-0.5">
+
+                        <i class="fas fa-phone-alt mr-2 text-sm"></i>
+
+                        <span class="text-xl font-bold tracking-wider font-sans">042-306-7126</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Instagram誘導エリア (埋め込み風デザイン) -->
+
+            <div class="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
+
+                <div class="flex items-center justify-center gap-2 mb-3">
+
+                    <i class="fab fa-instagram text-2xl"></i>
+
+                    <span class="font-bold">pocopocoの日常</span>
+
+                </div>
+
+                
+
+                <!-- インスタ風フォトグリッド -->
+
+                <div class="grid grid-cols-3 gap-2 mb-4">
+
+                    <img src="images/insta1.jpg" class="w-full aspect-square object-cover rounded shadow-sm opacity-90 hover:opacity-100 transition" alt="活動の様子1">
+
+                    <img src="images/insta2.jpg" class="w-full aspect-square object-cover rounded shadow-sm opacity-90 hover:opacity-100 transition" alt="活動の様子2">
+
+                    <img src="images/insta3.jpg" class="w-full aspect-square object-cover rounded shadow-sm opacity-90 hover:opacity-100 transition" alt="活動の様子3">
+
+                </div>
+
+                <a href="https://www.instagram.com/pocopoco_fuchu/" target="_blank" class="inline-block bg-white text-brand-main text-sm font-bold px-6 py-2 rounded-full shadow hover:bg-gray-100 transition">
+
+                    <i class="fab fa-instagram mr-1"></i>Instagramを見る
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- NEW: 9. アクセス情報 -->
+    <section class="py-12 px-4 bg-white border-t border-gray-100">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-center text-brand-main mb-8">
+                アクセス
+            </h2>
+            
+            <div class="bg-gray-50 p-5 rounded-xl shadow-inner mb-6">
+                <h3 class="font-bold text-lg text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-map-marker-alt text-brand-cta mr-2"></i>所在地
+                </h3>
+                <p class="text-sm text-gray-600 mb-4 pl-1">
+                    〒183-0052　東京都府中市新町1丁目71番地７
+                </p>
+                <p class="text-xs text-gray-500 mb-4 pl-1">
+                    ※駐車場はございません
+                </p>
+                <h3 class="font-bold text-lg text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-bus-alt text-brand-cta mr-2"></i>公共交通機関
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-600 pl-4 border-l-2 border-brand-accent/50">
+                    <li class="relative">
+                        <strong class="font-bold block">京王バスをご利用の場合</strong>
+                        <span>府中駅、または国分寺駅からバス乗車 → <strong>新町第二公園 下車 徒歩2分</strong></span>
+                    </li>
+                    <li class="relative">
+                        <strong class="font-bold block">電車の場合</strong>
+                        <span>JR武蔵野線 北府中駅より 徒歩約15分</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- Google Map 埋め込み -->
+            <div class="mt-8">
+                <h3 class="font-bold text-lg text-gray-700 mb-3 text-center">
+                    <i class="fas fa-route text-brand-cta mr-2"></i>Google Map
+                </h3>
+                <div class="w-full aspect-[4/3] bg-gray-200 rounded-xl overflow-hidden shadow-lg">
+                    <iframe 
+                        src="https://www.google.com/maps?q=東京都府中市新町1丁目71番地７&output=embed" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        class="w-full h-full">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 会社情報 -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-center text-brand-main mb-10">
+                <i class="fas fa-building mr-2 text-brand-accent"></i>会社情報
+            </h2>
+            
+            <div class="bg-brand-light rounded-xl p-6 border border-brand-main/20 space-y-6">
+                <div>
+                    <h3 class="font-bold text-brand-main mb-3 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-brand-accent"></i>
+                        事業所情報
+                    </h3>
+                    <div class="text-sm text-gray-700 space-y-1 pl-6">
+                        <p><strong>名称：</strong>児童発達支援 pocopoco</p>
+                        <p><strong>所在地：</strong>〒183-0052　東京都府中市新町1丁目71番地７</p>
+                        <p><strong>電話：</strong><a href="tel:042-306-7126" class="text-brand-main hover:underline">042-306-7126</a></p>
+                        <p><strong>受付時間：</strong>平日 9:00〜17:00</p>
+                    </div>
+                </div>
+
+                <div class="border-t border-brand-main/20 pt-6">
+                    <h3 class="font-bold text-brand-main mb-3 flex items-center">
+                        <i class="fas fa-briefcase mr-2 text-brand-accent"></i>
+                        運営会社
+                    </h3>
+                    <div class="text-sm text-gray-700 space-y-1 pl-6">
+                        <p><strong>会社名：</strong>株式会社INU</p>
+                        <p><strong>事業内容：</strong></p>
+                        <ul class="list-disc list-inside ml-2 space-y-1 text-xs">
+                            <li>児童発達支援事業</li>
+                            <li>放課後等デイサービス事業（開設予定）</li>
+                            <li>保育所等訪問支援事業（開設予定）</li>
+                            <li>相談支援事業（開設予定）</li>
+                            <li><a href="sitter.html" class="text-brand-main hover:underline font-bold">ベビーシッター事業（開設予定）</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-brand-main/20 pt-6">
+                    <h3 class="font-bold text-brand-main mb-3 flex items-center">
+                        <i class="fas fa-certificate mr-2 text-brand-accent"></i>
+                        事業所番号
+                    </h3>
+                    <div class="text-sm text-gray-700 pl-6">
+                        <p>児童発達支援事業所番号：<strong class="text-brand-main">1353800657</strong></p>
+                    </div>
+                </div>
+
+                <div class="border-t border-brand-main/20 pt-6">
+                    <h3 class="font-bold text-brand-main mb-3 flex items-center">
+                        <i class="fas fa-file-alt mr-2 text-brand-accent"></i>
+                        支援プログラムと自己評価の公表
+                    </h3>
+                    <div class="text-sm text-gray-700 pl-6">
+                        <p>
+                            <a href="program.html" class="text-brand-main hover:underline font-bold flex items-center">
+                                支援プログラム・自己評価の公表ページへ
+                                <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs">
+        <div class="mb-4 space-x-4">
+            <a href="index.html" class="hover:text-white transition">トップページ</a>
+            <span class="text-gray-600">|</span>
+            <a href="recruit.html" class="hover:text-white transition">採用情報</a>
+            <span class="text-gray-600">|</span>
+            <a href="sitter.html" class="hover:text-white transition">ベビーシッター</a>
+            <span class="text-gray-600">|</span>
+            <a href="program.html" class="hover:text-white transition">支援プログラム・自己評価</a>
+        </div>
+        <p class="mb-2">児童発達支援 pocopoco</p>
+        <p class="mb-4">〒183-0052　東京都府中市新町1丁目71番地７</p>
+        <p class="mb-1">運営会社：株式会社INU</p>
+        <p>&copy; 2025 pocopoco All Rights Reserved.</p>
+    </footer>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 md:hidden">
+        <a href="reservation.html" class="block w-full bg-brand-cta text-white text-center font-bold py-3 rounded-full shadow-md animate-pulse">
+            無料面談・見学を予約する
+        </a>
+    </div>
+
+    <script>
+        // Google Apps Script URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC_I5AZT7YyvXo5Vp6P7n0cphwBbcnKD4krmmbrASPkAuqPJPktSoU0T3w5yyBr-hK/exec";
+        
+        // ハンバーガーメニューの開閉
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    // アイコンの切り替え
+                    const icon = menuToggle.querySelector('i');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                });
+                
+                // メニュー外をクリックしたら閉じる
+                document.addEventListener('click', function(event) {
+                    if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = menuToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支援プログラム・自己評価 | pocopoco</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#FDFCF0',
+                            main: '#8B5A2B',
+                            accent: '#7CB342',
+                            cta: '#FF8F00',
+                            text: '#4A4A4A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        maru: ['"Zen Maru Gothic"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
+        h1, h2, h3 { font-family: 'Zen Maru Gothic', sans-serif; }
+    </style>
+</head>
+<body class="antialiased leading-relaxed pb-12 pt-16">
+    <!-- ヘッダー -->
+    <header class="bg-white/90 backdrop-blur-sm fixed top-0 w-full z-40 shadow-sm border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-brand-main text-xl tracking-wider font-maru hover:opacity-80 transition">
+                <img src="images/logo.png" alt="pocopoco" class="h-9">
+            </a>
+            <a href="index.html" class="text-sm text-gray-500 hover:text-brand-main transition font-bold">
+                <i class="fas fa-arrow-left mr-1"></i>TOPへ戻る
+            </a>
+        </div>
+    </header>
+    <main class="py-12 px-4 max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-brand-main mb-3">
+                支援プログラムと自己評価の公表
+            </h1>
+            <p class="text-gray-600">
+                当事業所が提供する支援の概要、および運営状況に関する自己評価の結果を公開しています。
+            </p>
+        </div>
+
+        <!-- 現在公開中のプログラム -->
+        <div class="mb-12 bg-white p-6 rounded-xl shadow-lg border-t-8 border-brand-accent">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-calendar-check text-brand-accent mr-2"></i>
+                2025年度 公開資料
+            </h2>
+            
+            <div class="space-y-4">
+                <!-- プログラム概要 -->
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold mb-1">公開日：2025年12月</p>
+                        <p class="text-base font-bold text-brand-main">児童発達支援 支援プログラム概要</p>
+                    </div>
+                    <a href="program/2025.pdf" target="_blank" class="bg-brand-cta text-white text-sm font-bold px-4 py-2 mt-3 sm:mt-0 rounded-full hover:bg-orange-600 transition flex items-center flex-shrink-0">
+                        <i class="fas fa-file-pdf mr-2"></i>PDFを見る
+                    </a>
+                </div>
+
+                <!-- 自己評価結果 -->
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold mb-1">公開日：2025年12月</p>
+                        <p class="text-base font-bold text-brand-main">自己評価結果</p>
+                    </div>
+                    <a href="#" target="_blank" class="bg-brand-cta text-white text-sm font-bold px-4 py-2 mt-3 sm:mt-0 rounded-full hover:bg-orange-600 transition flex items-center flex-shrink-0">
+                        <i class="fas fa-file-pdf mr-2"></i>PDFを見る
+                    </a>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-4 text-center">
+                ※支援プログラムおよび自己評価結果は、法令に基づき定期的に内容を見直し、更新いたします。
+            </p>
+        </div>
+
+        <!-- 過去のプログラム履歴 (将来的なイメージ) -->
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center border-b pb-2">
+                <i class="fas fa-history text-gray-400 mr-2"></i>
+                過去の公開資料（準備中）
+            </h2>
+            <div class="space-y-3 mt-4">
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200 flex items-center justify-between text-gray-600 opacity-70">
+                    <div>
+                        <p class="text-sm font-bold mb-1">2024年度版</p>
+                        <p class="text-base">プログラム概要 / 自己評価結果</p>
+                    </div>
+                    <span class="text-xs italic">準備中</span>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200 flex items-center justify-between text-gray-600 opacity-70">
+                    <div>
+                        <p class="text-sm font-bold mb-1">2023年度版</p>
+                        <p class="text-base">プログラム概要 / 自己評価結果</p>
+                    </div>
+                    <span class="text-xs italic">準備中</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs">
+        <div class="mb-4 space-x-4">
+            <a href="index.html" class="hover:text-white transition">トップページ</a>
+            <span class="text-gray-600">|</span>
+            <a href="recruit.html" class="hover:text-white transition">採用情報</a>
+            <span class="text-gray-600">|</span>
+            <a href="sitter.html" class="hover:text-white transition">ベビーシッター</a>
+            <span class="text-gray-600">|</span>
+            <a href="program.html" class="hover:text-white transition">支援プログラム・自己評価</a>
+        </div>
+        <p class="mb-2">児童発達支援 pocopoco</p>
+        <p class="mb-4">〒183-0052　東京都府中市新町1丁目71番地７</p>
+        <p class="mb-1">運営会社：株式会社INU</p>
+        <p>&copy; 2025 pocopoco All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+

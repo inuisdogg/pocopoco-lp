@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>採用情報 | 児童発達支援 pocopoco</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
+        h1, h2, h3 { font-family: 'Zen Maru Gothic', sans-serif; }
+        .recruit-hero {
+            background: linear-gradient(rgba(139, 90, 43, 0.7), rgba(139, 90, 43, 0.5)), url('images/hero.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        /* フォーム切り替えのアニメーション */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased leading-relaxed pb-12">
+
+    <!-- ヘッダー -->
+    <header class="bg-white/90 backdrop-blur-sm fixed top-0 w-full z-40 shadow-sm border-b border-stone-200">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-brand-main text-xl tracking-wider font-maru hover:opacity-80 transition">
+                <img src="images/logo.png" alt="pocopoco" class="h-9">
+            </a>
+            <a href="index.html" class="text-sm text-gray-500 hover:text-brand-main transition font-bold">
+                <i class="fas fa-arrow-left mr-1"></i>TOPへ戻る
+            </a>
+        </div>
+    </header>
+
+    <!-- メインビジュアル -->
+    <section class="recruit-hero h-[60vh] flex items-center justify-center pt-16 text-white text-center px-4">
+        <div>
+            <p class="font-bold tracking-widest mb-2 bg-white/20 inline-block px-4 py-1 rounded-full backdrop-blur-sm">採用情報</p>
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-md leading-tight">
+                「その子らしさ」を<br>一緒に育てる仲間へ。
+            </h1>
+            <p class="text-sm md:text-base font-medium opacity-90 bg-black/30 p-2 rounded">
+                木育 × 専門職チームで、<br class="md:hidden">新しい療育のカタチを作りませんか？
+            </p>
+        </div>
+    </section>
+
+    <!-- メッセージ (リライト版) -->
+    <section class="py-16 px-4 max-w-3xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-brand-main mb-8">
+            <i class="fas fa-leaf text-brand-accent mr-2"></i>私たちの想い
+        </h2>
+        <div class="space-y-4 leading-relaxed text-center text-gray-700 text-sm md:text-base">
+            <p>
+                pocopocoは、ただ子どもを預かり、<br>
+                時間を過ごすだけの場所ではありません。<br>
+                私たちが提供するのは、<br>
+                <strong class="text-brand-main border-b-4 border-brand-accent/20">遊びという名の「専門的な療育」</strong>です。
+            </p>
+            <p>
+                理学療法士、言語聴覚士、音楽教員、<br>
+                保育士、おもちゃコンサルタント。<br>
+                専門職が揃う私たちだからこそ、<br>
+                一見なにげない遊びの中にも<br>
+                子どもの発達を促す<br>
+                <strong class="text-brand-main border-b-4 border-orange-200">「根拠（エビデンス）」</strong>を散りばめることができます。
+            </p>
+            
+            <div class="mt-6 text-gray-600">
+                <p>
+                    単なる見守りにとどまらない、一歩踏み込んだ支援を。<br>
+                    <br>
+                    私たちは、子どもの発達を支える<br>
+                    「あなたの専門スキル」を求めています。<br>
+                    私たちと一緒に、<br>
+                    新しい療育のカタチを創っていきませんか？
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 働く環境 -->
+    <section class="py-12 px-4 bg-white">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-center text-brand-main mb-10">
+                <img src="images/logo.png" alt="pocopoco" class="inline-block h-12 align-middle mx-1">で働く魅力
+            </h2>
+            <div class="grid gap-6">
+                <!-- ポイント1 -->
+                <div class="bg-brand-light p-6 rounded-xl text-center border border-brand-main/20">
+                    <div class="w-16 h-16 bg-brand-accent/20 text-brand-accent rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-brand-main">癒やしの木育空間</h3>
+                    <p class="text-sm text-gray-600">
+                        木の香りが漂う職場環境。スタッフ自身もリラックスして支援に向き合えます。
+                    </p>
+                </div>
+
+                <!-- ポイント2 -->
+                <div class="bg-brand-light p-6 rounded-xl text-center border border-brand-main/20">
+                    <div class="w-16 h-16 bg-orange-100 text-brand-cta rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-brand-main">チームアプローチ</h3>
+                    <p class="text-sm text-gray-600">
+                        職種の垣根を超えたフラットな関係。カンファレンスで活発に意見交換を行っています。
+                    </p>
+                </div>
+
+                <!-- ポイント3 (働きやすさ重視) -->
+                <div class="bg-brand-light p-6 rounded-xl text-center border border-brand-main/20">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-brand-main">働きやすさ重視</h3>
+                    <p class="text-sm text-gray-600">
+                        <span class="font-bold text-brand-cta">9:00〜17:00（実働7時間）</span><br>
+                        多くの施設より勤務時間が短く、残業もほぼありません。プライベートも大切にできます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 募集要項 -->
+    <section class="py-16 px-4 max-w-md mx-auto">
+        <h2 class="text-2xl font-bold text-center text-brand-main mb-10">
+            募集要項
+        </h2>
+
+        <div class="space-y-12">
+            <!-- 1. 療育・訪問支援スタッフ -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+                <div class="bg-brand-main text-white p-4 font-bold flex flex-col md:flex-row justify-between items-center gap-2">
+                    <span class="text-lg"><i class="fas fa-child mr-2"></i>療育・訪問支援スタッフ</span>
+                    <span class="bg-white/20 text-xs px-3 py-1 rounded-full">正社員 / パート</span>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-600 mb-6 border-b border-gray-100 pb-4">
+                        児童発達支援事業所での療育業務、および保育所等訪問支援を担っていただきます。<br>
+                        教室での支援だけでなく、地域社会へ飛び出して子どもたちをサポートするやりがいのあるお仕事です。
+                    </p>
+                    <table class="w-full text-sm text-left border-collapse">
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <th class="py-4 font-bold text-gray-700 w-1/3 align-top">募集資格</th>
+                                <td class="py-4 text-gray-600 space-y-1">
+                                    <span class="block">• 理学療法士 (PT) / 作業療法士 (OT)</span>
+                                    <span class="block">• 言語聴覚士 (ST)</span>
+                                    <span class="block">• 看護師</span>
+                                    <span class="block">• 公認心理師 / 臨床心理士</span>
+                                    <span class="block">• 保育士 / 児童指導員任用資格</span>
+                                    <span class="text-xs text-brand-accent mt-1 block">※訪問支援員としての経験がある方歓迎</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="py-4 font-bold text-gray-700 align-top">業務内容</th>
+                                <td class="py-4 text-gray-600">
+                                    ・教室での個別/小集団療育<br>
+                                    ・保育所、幼稚園等への訪問支援<br>
+                                    ・支援計画の作成補助、保護者連携<br>
+                                    ・送迎業務（AT限定可）<br class="md:hidden">※相談可
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="py-4 font-bold text-gray-700 align-top">雇用条件</th>
+                                <td class="py-4 text-gray-600">
+                                    <span class="text-brand-main font-medium">【給与】</span><br>
+                                    正社員：月給 240,000円 〜 350,000円<br>
+                                    パート：時給 1,200円 〜 1,800円<br>
+                                    <br>
+                                    <span class="text-brand-main font-medium">【勤務時間】</span><br>
+                                    9:00 〜 17:00（実働7h・休憩60分）
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. 相談支援専門員（立ち上げ） -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-brand-accent/50 relative">
+                <div class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg z-10">
+                    OPENING
+                </div>
+                <div class="bg-brand-accent text-white p-4 font-bold flex flex-col md:flex-row justify-between items-center gap-2">
+                    <span class="text-lg"><i class="fas fa-comments mr-2"></i>相談支援専門員（立ち上げ）</span>
+                    <span class="bg-white/20 text-xs px-3 py-1 rounded-full">正社員 / パート</span>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-600 mb-6 border-b border-gray-100 pb-4">
+                        新規開設する「相談支援事業所」の立ち上げ業務および計画相談業務をお任せします。<br>
+                        ゼロから事業所を作っていく経験ができる、裁量のあるポジションです。
+                    </p>
+                    <table class="w-full text-sm text-left border-collapse">
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <th class="py-4 font-bold text-gray-700 w-1/3 align-top">募集資格</th>
+                                <td class="py-4 text-gray-600">
+                                    <span class="font-medium text-brand-main">相談支援専門員</span> の要件を満たす方<br>
+                                    （実務経験および相談支援従事者初任者研修修了済みの方）
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="py-4 font-bold text-gray-700 align-top">業務内容</th>
+                                <td class="py-4 text-gray-600">
+                                    ・相談支援事業所の立ち上げ準備<br>
+                                    ・利用計画の作成、モニタリング<br>
+                                    ・関係機関との調整、連携
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="py-4 font-bold text-gray-700 align-top">雇用条件</th>
+                                <td class="py-4 text-gray-600">
+                                    <span class="text-brand-main font-medium">【給与】</span><br>
+                                    正社員：月給 260,000円 〜 380,000円<br>
+                                    パート：時給 1,500円 〜<br>
+                                    <span class="text-xs text-gray-500">※前職給与・経験を考慮し優遇します</span><br>
+                                    <br>
+                                    <span class="text-brand-main font-medium">【勤務時間】</span><br>
+                                    9:00 〜 17:00（実働7h・休憩60分）
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 共通待遇 -->
+            <div class="bg-gray-50 p-6 rounded-xl text-sm border border-gray-200">
+                <h3 class="font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">共通待遇・福利厚生</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <dl>
+                        <dt class="font-bold text-brand-main">休日・休暇</dt>
+                        <dd class="text-gray-600 pl-4 mb-2">完全週休2日制（日曜＋他1日）、年末年始、有給、慶弔</dd>
+                        <dt class="font-bold text-brand-main">雇用期間</dt>
+                        <dd class="text-gray-600 pl-4 mb-2">正社員：期間の定めなし / パート：期間の定めあり（原則更新）</dd>
+                    </dl>
+                    <dl>
+                        <dt class="font-bold text-brand-main">加入保険</dt>
+                        <dd class="text-gray-600 pl-4 mb-2">雇用・労災・健康・厚生年金（法定通り）</dd>
+                        <dt class="font-bold text-brand-main">その他</dt>
+                        <dd class="text-gray-600 pl-4">試用期間3ヶ月（同条件）、受動喫煙対策：敷地内全面禁煙</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- エントリーフォームエリア -->
+    <section class="py-16 px-4 bg-gray-100" id="entry">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-center text-brand-main mb-2 font-maru">
+                エントリー
+            </h2>
+            <p class="text-center text-sm text-gray-600 mb-8">
+                以下のフォームよりご応募ください。<br>
+                まずは見学だけ、という方も歓迎です。
+            </p>
+
+            <!-- エントリーフォーム本体 -->
+            <div id="formContainer" class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-16">
+                
+                <!-- 応募方法の切り替えスイッチ -->
+                <div class="flex bg-gray-100 p-1 rounded-lg mb-8 text-sm font-bold">
+                    <button type="button" onclick="switchForm('resume')" id="btn-resume" class="flex-1 py-3 rounded-md transition-all bg-white text-brand-main shadow-sm border border-gray-200">
+                        <i class="fas fa-file-upload mr-2"></i>履歴書で応募
+                    </button>
+                    <button type="button" onclick="switchForm('detail')" id="btn-detail" class="flex-1 py-3 rounded-md transition-all text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-list-ul mr-2"></i>質問に回答して応募
+                    </button>
+                </div>
+
+                <form id="recruitForm">
+                    <!-- 共通項目: 名前/連絡先 -->
+                    <div class="space-y-5 mb-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">お名前 <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 focus:ring-brand-cta focus:border-brand-cta" placeholder="例：府中 太郎">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">メールアドレス <span class="text-red-500">*</span></label>
+                                <input type="email" name="email" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 focus:ring-brand-cta focus:border-brand-cta" placeholder="example@email.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">電話番号 <span class="text-red-500">*</span></label>
+                                <input type="tel" name="tel" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 focus:ring-brand-cta focus:border-brand-cta" placeholder="090-0000-0000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- パターンA: 履歴書アップロード -->
+                    <div id="form-resume" class="fade-in">
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 hover:bg-gray-100 transition relative">
+                            <input type="file" name="resumeFile" id="resumeFile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".pdf,.doc,.docx,.jpg,.png">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                            <p class="font-bold text-gray-600 mb-1">履歴書ファイルをアップロード</p>
+                            <p class="text-xs text-gray-500">PDF, Word, 画像形式 (最大5MB)</p>
+                            <p id="fileName" class="text-sm text-brand-main font-bold mt-2"></p>
+                        </div>
+                    </div>
+
+                    <!-- パターンB: 詳細入力 (修正: 全項目必須化) -->
+                    <div id="form-detail" class="hidden fade-in space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">生年月日 <span class="text-red-500">*</span></label>
+                                <input type="date" name="birthdate" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">性別 <span class="text-red-500">*</span></label>
+                                <select name="gender" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3" required>
+                                    <option value="">選択してください</option>
+                                    <option value="男性">男性</option>
+                                    <option value="女性">女性</option>
+                                    <option value="その他">その他</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">事業所までの通勤時間 <span class="text-red-500">*</span></label>
+                            <input type="text" name="commuteTime" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3" placeholder="例：電車と徒歩で45分" required>
+                            <p class="text-xs text-gray-500 mt-1">※事業所：府中市新町1丁目71-7</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">希望される勤務形態 <span class="text-red-500">*</span></label>
+                            <div class="flex gap-4 mt-2">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="employmentType" value="正社員" class="w-4 h-4 text-brand-cta focus:ring-brand-cta" required>
+                                    <span class="ml-2 text-sm">正社員</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="employmentType" value="パート" class="w-4 h-4 text-brand-cta focus:ring-brand-cta" required>
+                                    <span class="ml-2 text-sm">パート</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">現在のご勤務状況 <span class="text-red-500">*</span></label>
+                            <input type="text" name="currentJob" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3" placeholder="例：〇〇病院にて勤務中、離職中など" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">所有資格 <span class="text-xs font-normal text-gray-500">(複数選択可)</span> <span class="text-red-500">*</span></label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="理学療法士" class="mr-2">理学療法士</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="作業療法士" class="mr-2">作業療法士</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="言語聴覚士" class="mr-2">言語聴覚士</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="看護師" class="mr-2">看護師</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="公認心理師/臨床心理士" class="mr-2">公認心理師/臨床心理士</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="保育士" class="mr-2">保育士</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="児童指導員任用資格" class="mr-2">児童指導員任用資格</label>
+                                <label class="flex items-center"><input type="checkbox" name="qualification" value="普通自動車免許" class="mr-2">普通自動車免許</label>
+                            </div>
+                            <input type="text" name="qualificationOther" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 mt-2 text-sm" placeholder="その他資格があればご記入ください">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">勤務可能開始日 <span class="text-red-500">*</span></label>
+                                <input type="text" name="startDate" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3" placeholder="例：2024年4月1日〜、即日など" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">希望年収 <span class="text-red-500">*</span></label>
+                                <input type="text" name="salary" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3" placeholder="例：400万円" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 個人情報保護方針への同意 -->
+                    <div class="mt-6 mb-4 flex justify-center">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="privacyAgree" class="w-5 h-5 text-brand-main border-gray-300 rounded focus:ring-brand-cta cursor-pointer" required>
+                            <span class="ml-3 text-sm text-gray-700">
+                                <span onclick="openPrivacyModal(); event.stopPropagation();" class="font-bold text-brand-main cursor-pointer hover:opacity-80 transition">個人情報の取り扱い</span>について同意する
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- 送信ボタン -->
+                    <div class="mt-4">
+                        <button type="submit" id="submitBtn" class="w-full bg-brand-main text-white font-bold py-4 rounded-full shadow-lg hover:bg-brown-700 transition transform hover:-translate-y-1">
+                            上記の内容で送信する <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="recruitSuccess" class="hidden text-center py-10">
+                    <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">ご応募ありがとうございます</h3>
+                    <p class="text-gray-600 mb-6">内容を確認の上、採用担当よりご連絡させていただきます。</p>
+                    <button onclick="location.reload()" class="text-brand-main underline">入力画面に戻る</button>
+                </div>
+            </div>
+
+            <!-- お問い合わせエリア -->
+            <div class="text-center">
+                <div class="inline-block bg-white px-6 py-2 rounded-full shadow-sm text-sm font-bold text-brand-main mb-4 border border-gray-200">
+                    <i class="fas fa-question-circle mr-2"></i>応募前に質問したいことがある方へ
+                </div>
+                <h3 class="text-lg font-bold text-gray-700 mb-2">
+                    採用に関するお問い合わせ
+                </h3>
+                <p class="text-sm text-gray-600 mb-6">
+                    「応募の前に少し聞いてみたい」「職場の雰囲気をもっと知りたい」など、<br class="hidden md:block">
+                    気になることがあればLINEからお気軽にお問い合わせください。
+                </p>
+                
+                <!-- LINEボタン -->
+                <a href="https://lin.ee/bN5scT0" target="_blank" class="group block w-full bg-white text-[#06C755] font-bold py-5 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-4 border border-gray-200 hover:border-[#06C755]/30 transform hover:-translate-y-0.5 max-w-md mx-auto">
+                    <div class="flex-shrink-0 w-12 h-12 bg-[#06C755]/10 rounded-xl flex items-center justify-center group-hover:bg-[#06C755]/20 transition-colors">
+                        <i class="fab fa-line text-[#06C755] text-2xl"></i>
+                    </div>
+                    <div class="flex-1 text-left">
+                        <div class="text-xs text-gray-500 font-normal mb-0.5">気軽にチャットで質問・相談</div>
+                        <div class="text-base font-bold">LINEで問い合わせる</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-[#06C755] group-hover:translate-x-1 transition-all"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 個人情報保護方針モーダル -->
+    <div id="privacyModal" class="hidden fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full m-auto animate-[fadeIn_0.2s_ease-out]">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
+                    <h3 class="text-lg font-bold text-brand-main">個人情報の取り扱いについて</h3>
+                    <button onclick="closePrivacyModal()" class="text-gray-400 hover:text-gray-600 transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="text-sm text-gray-600 space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-1">1. 利用目的</h4>
+                        <p>ご提供いただいた個人情報は、採用選考および応募者への連絡、採用後の人事管理業務のみに利用いたします。これ以外の目的で利用することはありません。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-1">2. 第三者への提供</h4>
+                        <p>法令に基づく場合を除き、ご本人の同意なく個人情報を第三者に提供することはありません。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-1">3. 個人情報の管理</h4>
+                        <p>応募者の個人情報は、当社の個人情報保護方針に基づき厳重に管理いたします。不採用となった場合、提出いただいた書類は当社規定に従い、速やかに破棄または返却いたします。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-1">4. お問い合わせ窓口</h4>
+                        <p>個人情報の取り扱いに関するお問い合わせは、採用担当までご連絡ください。</p>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <button onclick="closePrivacyModal()" class="bg-brand-main text-white font-bold py-2 px-8 rounded-full hover:bg-brown-700 transition">
+                        閉じる
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs">
+        <div class="mb-4 space-x-4">
+            <a href="index.html" class="hover:text-white transition">トップページ</a>
+            <span class="text-gray-600">|</span>
+            <a href="recruit.html" class="hover:text-white transition">採用情報</a>
+            <span class="text-gray-600">|</span>
+            <a href="sitter.html" class="hover:text-white transition">ベビーシッター</a>
+            <span class="text-gray-600">|</span>
+            <a href="program.html" class="hover:text-white transition">支援プログラム・自己評価</a>
+        </div>
+        <p class="mb-2">児童発達支援 pocopoco</p>
+        <p class="mb-4">〒183-0052　東京都府中市新町1丁目71番地７</p>
+        <p class="mb-1">運営会社：株式会社INU</p>
+        <p>&copy; 2025 pocopoco All Rights Reserved.</p>
+    </footer>
+
+    <!-- スクリプト: フォーム制御 -->
+    <script>
+        // ★ここに最新のGAS URLを貼り付けてください
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxO7NAXqG1VUdMH9teFHRjz7Z8zyfyG7FC7Hm2NBO4e6vrA8w6S2GU1SGe_4ll68pU/exec"; 
+
+        // フォーム切り替えロジック（ここは維持）
+        let currentMode = 'resume';
+
+        // フォーム切り替え関数（ここは維持）
+        function switchForm(mode) {
+            currentMode = mode;
+            const btnResume = document.getElementById('btn-resume');
+            const btnDetail = document.getElementById('btn-detail');
+            const formResume = document.getElementById('form-resume');
+            const formDetail = document.getElementById('form-detail');
+            const formInputs = formDetail.querySelectorAll('input, select');
+
+            if (mode === 'resume') {
+                btnResume.className = "flex-1 py-3 rounded-md transition-all bg-white text-brand-main shadow-sm border border-gray-200 font-bold";
+                btnDetail.className = "flex-1 py-3 rounded-md transition-all text-gray-500 hover:text-gray-700 bg-transparent";
+                formResume.classList.remove('hidden');
+                formDetail.classList.add('hidden');
+                formInputs.forEach(input => input.removeAttribute('required'));
+
+            } else {
+                btnDetail.className = "flex-1 py-3 rounded-md transition-all bg-white text-brand-main shadow-sm border border-gray-200 font-bold";
+                btnResume.className = "flex-1 py-3 rounded-md transition-all text-gray-500 hover:text-gray-700 bg-transparent";
+                formDetail.classList.remove('hidden');
+                formResume.classList.add('hidden');
+                formInputs.forEach(input => {
+                    if(input.name !== 'qualificationOther' && input.type !== 'checkbox') {
+                        input.setAttribute('required', 'true');
+                    }
+                });
+            }
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+             const formDetail = document.getElementById('form-detail');
+             const formInputs = formDetail.querySelectorAll('input, select');
+             formInputs.forEach(input => input.removeAttribute('required'));
+             // 初期モード設定
+             switchForm('resume'); 
+        });
+
+        // ファイル名表示
+        document.getElementById('resumeFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : '';
+            document.getElementById('fileName').textContent = fileName ? `選択中: ${fileName}` : '';
+        });
+
+        // モーダル制御関数 (省略)
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('hidden');
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.add('hidden');
+        }
+
+        // ■■■ 送信処理 ■■■
+        const form = document.getElementById('recruitForm');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 共通バリデーション (同意チェック)
+            const privacyAgree = document.getElementById('privacyAgree');
+            if (!privacyAgree.checked) {
+                alert('個人情報の取り扱いについて同意してください。');
+                return;
+            }
+
+            // バリデーション
+            if (currentMode === 'detail') {
+                 const quals = document.querySelectorAll('input[name="qualification"]:checked');
+                 const qualOther = document.querySelector('input[name="qualificationOther"]').value;
+                 if (quals.length === 0 && !qualOther.trim()) {
+                     alert('所有資格を少なくとも1つ選択するか、その他欄に入力してください。');
+                     return;
+                 }
+            } else if (currentMode === 'resume') {
+                const fileInput = document.getElementById('resumeFile');
+                if (!fileInput.files.length) {
+                    alert('履歴書ファイルを選択してください');
+                    return;
+                }
+                // ファイルサイズチェック (5MB)
+                if (fileInput.files[0].size > 5 * 1024 * 1024) {
+                    alert('ファイルサイズが大きすぎます（5MB以下にしてください）');
+                    return;
+                }
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 送信中...';
+
+            try {
+            // フォームデータの取得
+                const formData = new FormData(form);
+                
+                // 送信データの準備（基本情報）
+                // GAS側で期待される形式:
+                // - formType: 'recruit' (必須: フォーム種別の識別)
+                // - requestType: "履歴書応募" または "詳細入力応募" (必須: 応募方法)
+                // - parentName: 応募者名 (必須)
+                // - email: メールアドレス (必須)
+                // - tel: 電話番号 (必須)
+                // - fileData: Base64エンコードされたファイルデータ (履歴書応募時のみ)
+                // - fileName: ファイル名 (履歴書応募時のみ)
+                // - mimeType: MIMEタイプ (履歴書応募時のみ)
+                // - message: メッセージ (必須)
+                const data = {
+                    formType: 'recruit',
+                    requestType: currentMode === 'resume' ? "履歴書応募" : "詳細入力応募",
+                    parentName: formData.get('name') || '', // フォームのname属性に合わせて修正
+                    email: formData.get('email') || '',
+                    tel: formData.get('tel') || ''
+                };
+                
+                // 必須フィールドの検証
+                if (!data.parentName || !data.email || !data.tel) {
+                    alert('必須項目が入力されていません。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    return;
+                }
+
+                // ★デバッグログ 1
+                console.log("DEBUG 1: 送信処理開始 (モード: " + currentMode + ")");
+
+                // ファイル処理ブロック
+                const fileInput = document.getElementById('resumeFile');
+                
+                if (currentMode === 'resume' && fileInput && fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    
+                    // ★デバッグログ 2
+                    console.log("DEBUG 2: Base64変換を開始します。ファイル名:", file.name, "サイズ:", file.size); 
+
+                    try {
+                        // AWAITで処理が一時停止
+                        data.fileData = await convertToBase64(file);
+                        
+                        // ★デバッグログ 3
+                        console.log("DEBUG 3: Base64変換が完了しました。データサイズ:", data.fileData ? data.fileData.length : 0); 
+
+                        data.fileName = file.name;
+                        data.mimeType = file.type;
+                        data.message = `ファイル名: ${file.name}`;
+                    } catch (fileError) {
+                        console.error("DEBUG: Base64変換エラー:", fileError);
+                        alert('ファイルの読み込みに失敗しました。');
+                    submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                        return;
+                    }
+                } else if (currentMode === 'detail') {
+                    // 詳細入力モードのメッセージ整形ロジック (省略)
+                    // ...
+                const quals = [];
+                document.querySelectorAll('input[name="qualification"]:checked').forEach(cb => quals.push(cb.value));
+                if(formData.get('qualificationOther')) quals.push(formData.get('qualificationOther'));
+                const details = [
+                    `[生年月日] ${formData.get('birthdate')}`,
+                    `[性別] ${formData.get('gender')}`,
+                    `[通勤] ${formData.get('commuteTime')}`,
+                    `[形態] ${formData.get('employmentType')}`,
+                    `[現職] ${formData.get('currentJob')}`,
+                    `[資格] ${quals.join(', ')}`,
+                    `[開始] ${formData.get('startDate')}`,
+                    `[年収] ${formData.get('salary')}`
+                ];
+                    data.message = details.join('\n');
+                }
+
+                // ★デバッグログ 4 (fetch直前)
+                console.log("DEBUG 4: Fetchリクエスト送信中...");
+                console.log("DEBUG 4-1: 送信データの構造:", {
+                    formType: data.formType,
+                    requestType: data.requestType,
+                    parentName: data.parentName,
+                    email: data.email,
+                    tel: data.tel,
+                    hasFileData: !!data.fileData,
+                    fileName: data.fileName,
+                    mimeType: data.mimeType,
+                    message: data.message,
+                    fileDataLength: data.fileData ? data.fileData.length : 0
+                });
+                console.log("DEBUG 4-2: 送信URL:", SCRIPT_URL);
+                console.log("DEBUG 4-3: 送信データ全体（ファイルデータ除く）:", JSON.stringify({
+                    ...data,
+                    fileData: data.fileData ? `[Base64データ: ${data.fileData.length}文字]` : null
+                }));
+                
+                // GASへ送信
+                try {
+                    // 送信データのサイズを確認
+                    const jsonData = JSON.stringify(data);
+                    const dataSize = new Blob([jsonData]).size;
+                    console.log("DEBUG 4-4: 送信データサイズ:", dataSize, "bytes (", (dataSize / 1024).toFixed(2), "KB)");
+                    
+                    // GASのURLが正しいか確認
+                    if (!SCRIPT_URL || !SCRIPT_URL.includes('script.google.com')) {
+                        console.error("DEBUG ERROR: SCRIPT_URLが無効です:", SCRIPT_URL);
+                        alert('GASのURLが正しく設定されていません。');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                        return;
+                    }
+                    
+                    console.log("DEBUG 4-5: Fetchリクエストを送信します...");
+                    
+                    // GASへの送信（no-corsモードを使用）
+                    // 注意: no-corsモードでは、Content-Typeヘッダーが正しく送信されない可能性があります
+                    // GAS側では e.postData.contents から JSON.parse() でデータを取得する必要があります
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: jsonData
+                    });
+                    
+                    // 送信データの最初の100文字をログに出力（デバッグ用）
+                    console.log("DEBUG 4-6: 送信データの先頭100文字:", jsonData.substring(0, 100));
+                    
+                    // ★デバッグログ 5 (fetch完了)
+                    console.log("DEBUG 5: Fetchリクエスト送信完了");
+                    console.log("DEBUG 5-1: Response type:", response.type);
+                    console.log("DEBUG 5-2: Response status:", response.status);
+                    console.log("DEBUG 5-3: Response ok:", response.ok);
+                    
+                    // no-corsモードではレスポンスは読めないが、送信は完了している
+                    console.log("DEBUG 5-4: 送信は完了しました（no-corsモードのためレスポンスは確認できません）");
+                    console.log("DEBUG 5-5: GAS側でデータが正しく処理されているか確認してください");
+                    
+                } catch (fetchError) {
+                    console.error("DEBUG ERROR: Fetchエラー:", fetchError);
+                    console.error("DEBUG ERROR詳細:", {
+                        name: fetchError.name,
+                        message: fetchError.message,
+                        stack: fetchError.stack
+                    });
+                    alert('送信に失敗しました: ' + fetchError.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    return;
+                }
+
+                // 成功時の処理（no-corsモードでは常に実行）
+                console.log("DEBUG 6: 成功時の処理を実行します");
+                
+                const formContainer = document.getElementById('formContainer');
+                const formElement = document.getElementById('recruitForm');
+                const successElement = document.getElementById('recruitSuccess');
+                const entryElement = document.getElementById('entry');
+                
+                console.log("DEBUG 7: 要素の確認", {
+                    formContainer: formContainer ? "存在" : "見つからない",
+                    formElement: formElement ? "存在" : "見つからない",
+                    successElement: successElement ? "存在" : "見つからない",
+                    entryElement: entryElement ? "存在" : "見つからない"
+                });
+                
+                // フォームを非表示にする（親コンテナ内のフォーム要素を非表示）
+                if (formElement) {
+                    formElement.style.display = 'none';
+                    console.log("DEBUG 8: フォームを非表示にしました");
+                } else {
+                    console.error("DEBUG 8: recruitForm要素が見つかりません");
+                }
+                
+                // 成功メッセージを表示
+                if (successElement) {
+                    successElement.classList.remove('hidden');
+                    successElement.style.display = 'block';
+                    console.log("DEBUG 9: 成功メッセージを表示しました");
+                } else {
+                    console.error("DEBUG 9: recruitSuccess要素が見つかりません");
+                }
+                
+                if (entryElement) {
+                    window.scrollTo(0, entryElement.offsetTop);
+                    console.log("DEBUG 10: スクロール完了");
+                } else {
+                    console.warn("DEBUG 10: entry要素が見つからないため、スクロールをスキップ");
+                    window.scrollTo(0, 0);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('送信に失敗しました。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        // ファイルをBase64に変換する魔法の関数
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    reject(new Error('ファイルが選択されていません'));
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = () => {
+                    // ★デバッグログ A
+                    console.log("DEBUG A: File Reader 読み込み完了", reader.result ? "データあり" : "データなし"); 
+                    if (!reader.result) {
+                        reject(new Error('ファイルの読み込み結果が空です'));
+                        return;
+                    }
+                    // "data:application/pdf;base64,..." の頭の部分を取り除く
+                    const result = reader.result.split(',')[1];
+                    if (!result) {
+                        reject(new Error('Base64データの抽出に失敗しました'));
+                        return;
+                    }
+                    console.log("DEBUG A-2: Base64データ抽出完了、長さ:", result.length);
+                    resolve(result);
+                };
+                
+                reader.onerror = error => {
+                    // ★デバッグログ B
+                    console.error("DEBUG B: File Reader エラー:", error); 
+                    reject(error);
+                };
+                
+                reader.onabort = () => {
+                    console.error("DEBUG B-2: File Reader 中断されました");
+                    reject(new Error('ファイルの読み込みが中断されました'));
+                };
+                
+                // 読み込み開始
+                console.log("DEBUG A-0: File Reader 読み込み開始");
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+
+</body>
+</html>
+
