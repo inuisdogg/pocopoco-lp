@@ -28,6 +28,28 @@ details > summary::-webkit-details-marker {
     display: none;
 }
 
+/* アコーディオンの開閉アニメーション */
+details[open] > summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+details .space-y-4,
+details .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* スムーズスクロール */
 html {
     scroll-behavior: smooth;
