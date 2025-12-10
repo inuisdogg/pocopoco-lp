@@ -64,8 +64,10 @@ function doPost(e) {
   output.setMimeType(ContentService.MimeType.JSON);
 
   try {
-    console.log("=== doPost 開始 ===");
+    console.log("=== 📥 doPost 開始 ===");
     console.log("e の存在:", !!e);
+    console.log("e.postData の存在:", !!(e && e.postData));
+    console.log("e.parameter の存在:", !!(e && e.parameter));
     
     // パラメータ取得の試行
     var params = {};
@@ -73,14 +75,17 @@ function doPost(e) {
     
     // 方法1: postData.contentsから取得（JSON形式）
     if (e && e.postData && e.postData.contents) {
-      console.log("postData.contents から取得を試行");
+      console.log("📥 postData.contents から取得を試行");
       console.log("postData.type:", e.postData.type);
       console.log("postData.contents の長さ:", e.postData.contents.length);
+      console.log("postData.contents の最初の200文字:", e.postData.contents.substring(0, 200));
       
       try {
         params = JSON.parse(e.postData.contents);
         dataSource = "postData.contents";
-        console.log("✓ postData.contents から取得成功");
+        console.log("✅ postData.contents から取得成功");
+        console.log("取得したparams.action:", params.action);
+        console.log("取得したparams.formType:", params.formType);
         
         // ネストされた配列が文字列になっている可能性があるため、再パースを試行
         if (params.selectedDateTimes && typeof params.selectedDateTimes === 'string') {
