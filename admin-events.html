@@ -15,6 +15,11 @@
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
         h1, h2 { font-family: 'Zen Maru Gothic', sans-serif; }
+        /* ブランドカラーのフォールバック */
+        .bg-brand-main { background-color: #8B5A2B !important; }
+        .bg-brand-cta { background-color: #FF8F00 !important; }
+        .bg-brand-accent { background-color: #7CB342 !important; }
+        .text-brand-main { color: #8B5A2B !important; }
     </style>
 </head>
 <body class="antialiased">
@@ -513,7 +518,17 @@
 
         // イベントを保存
         function saveEvent(eventData, submitBtn, originalBtnText) {
-            console.log('保存するデータ:', eventData);
+            console.log('=== イベント保存開始 ===');
+            console.log('保存するデータ:', JSON.stringify(eventData, null, 2));
+            console.log('SCRIPT_URL:', SCRIPT_URL);
+            
+            // データの検証
+            if (!eventData.title || !eventData.category || !eventData.date || !eventData.time) {
+                alert('必須項目が入力されていません。\n\nタイトル、カテゴリ、開催日、開催時間を確認してください。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                return;
+            }
             
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -522,18 +537,20 @@
                 body: JSON.stringify(eventData)
             })
             .then(() => {
+                console.log('リクエスト送信完了');
                 // no-corsモードではレスポンスが取得できないため、少し待ってからイベント一覧を再読み込み
                 setTimeout(() => {
+                    console.log('イベント一覧を再読み込み');
                     loadEvents();
-                    alert('イベントを保存しました。');
+                    alert('イベントを保存しました。\n\nスプレッドシートとGoogle Driveを確認してください。');
                     closeModal();
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnText;
-                }, 1000);
+                }, 2000); // 2秒待つ
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('保存に失敗しました。Google Apps Scriptのログを確認してください。\n\nエラー: ' + error.message);
+                alert('保存に失敗しました。\n\nブラウザのコンソール（F12）でエラーを確認してください。\n\nエラー: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
             });

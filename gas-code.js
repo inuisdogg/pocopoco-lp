@@ -557,13 +557,22 @@ function doPost(e) {
       console.log("=== イベント管理処理を開始 ===");
       console.log("action: " + params.action);
       console.log("params: " + JSON.stringify(params));
+      console.log("EVENT_SHEET_NAME: " + EVENT_SHEET_NAME);
+      console.log("EVENT_IMAGE_FOLDER_ID: " + EVENT_IMAGE_FOLDER_ID);
       
       try {
+        // スプレッドシートを開く
+        var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+        console.log("スプレッドシートを開きました: " + SPREADSHEET_ID);
+        
         var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
+        console.log("シート取得結果: " + (sheet ? "成功" : "失敗"));
       
       if (!sheet) {
+        console.log("シートが存在しないため、新規作成します");
         // シートが存在しない場合は作成
         sheet = ss.insertSheet(EVENT_SHEET_NAME);
+        console.log("シートを作成しました: " + EVENT_SHEET_NAME);
         // ヘッダー行を追加
         sheet.appendRow([
           'ID',
@@ -583,6 +592,7 @@ function doPost(e) {
         var headerRange = sheet.getRange(1, 1, 1, 12);
         headerRange.setFontWeight('bold');
         headerRange.setBackground('#E8E8E8');
+        console.log("ヘッダー行を追加しました");
       }
       
       var date = new Date();
@@ -591,20 +601,28 @@ function doPost(e) {
       // 画像がある場合は先にアップロード
       var imageUrl = params.imageUrl || '';
       if (params.imageBase64) {
+        console.log("画像アップロード処理を開始");
+        console.log("画像データの長さ: " + (params.imageBase64 ? params.imageBase64.length : 0));
         try {
           var decoded = Utilities.base64Decode(params.imageBase64);
           var fileName = params.imageFileName || 'event_' + Date.now() + '.jpg';
           var blob = Utilities.newBlob(decoded, 'image/jpeg', fileName);
+          console.log("Blob作成完了: " + fileName);
           
           var folder = DriveApp.getFolderById(EVENT_IMAGE_FOLDER_ID);
+          console.log("フォルダ取得完了: " + EVENT_IMAGE_FOLDER_ID);
           var file = folder.createFile(blob);
+          console.log("ファイル作成完了: " + file.getName());
           file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
           imageUrl = file.getUrl().replace('/file/d/', '/uc?export=view&id=').replace('/view?usp=sharing', '');
           
           console.log("画像アップロード成功: " + imageUrl);
         } catch (error) {
           console.error("画像アップロードエラー:", error);
+          console.error("エラースタック:", error.stack);
         }
+      } else {
+        console.log("画像データなし");
       }
       
       // イベント作成
@@ -622,7 +640,7 @@ function doPost(e) {
         }
         var newId = maxId + 1;
         
-        sheet.appendRow([
+        var rowData = [
           newId,
           params.title || '',
           params.category || '',
@@ -635,9 +653,13 @@ function doPost(e) {
           'false',
           dateStr,
           dateStr
-        ]);
+        ];
+        
+        console.log("追加する行データ: " + JSON.stringify(rowData));
+        sheet.appendRow(rowData);
         
         console.log("イベント作成完了: ID=" + newId);
+        console.log("スプレッドシートの最終行: " + sheet.getLastRow());
       }
       
       // イベント更新
