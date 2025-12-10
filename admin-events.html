@@ -178,7 +178,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyaSsSxPDcF3wFQ9TTeUqzFNxiC1I7TGiVfv9ceLNp9UD_aEhVPyP0o0uADMrFrHft/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv4fb-2jpt3xz8JrB1rs2BAWqnKt4vNIao0o3kc6lulGiY4qjB76JpTF6Yxjzi03t5/exec";
         
         // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
         const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
@@ -556,30 +556,80 @@
             console.log('Body:', eventData);
             console.groupEnd();
             
+            // リクエスト送信前に最終確認
+            console.log('🚀 リクエスト送信開始');
+            console.log('送信URL:', SCRIPT_URL);
+            console.log('送信データ:', eventData);
+            
+            // まず通常のCORSモードで試行（レスポンスを確認できる）
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
                 body: requestBody
             })
-            .then(() => {
-                console.log('✅ リクエスト送信完了（no-corsモードのためレスポンスは取得できません）');
-                console.log('⚠️ Google Apps Scriptの実行ログを確認してください');
-                // no-corsモードではレスポンスが取得できないため、少し待ってからイベント一覧を再読み込み
-                setTimeout(() => {
-                    console.log('🔄 イベント一覧を再読み込み');
-                    loadEvents();
-                    alert('イベントを保存しました。\n\n⚠️ 実際に保存されたか確認してください：\n1. スプレッドシートの「イベント一覧」タブ\n2. Google Driveの指定フォルダ\n3. Google Apps Scriptの実行ログ');
+            .then(response => {
+                console.log('📥 レスポンス受信:', response.status, response.statusText);
+                return response.text().then(text => {
+                    console.log('📥 レスポンス本文:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.warn('レスポンスのJSONパースに失敗:', text);
+                        return { status: 'unknown', raw: text };
+                    }
+                });
+            })
+            .then(data => {
+                console.log('📥 パース済みレスポンス:', data);
+                if (data.status === 'success') {
+                    console.log('✅ イベント保存成功！');
+                    alert('イベントを保存しました。');
                     closeModal();
+                    loadEvents();
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnText;
-                }, 3000); // 3秒待つ（GAS処理に時間がかかる場合があるため）
+                } else {
+                    console.error('❌ 保存失敗:', data.message || data);
+                    alert('保存に失敗しました。\n\nエラー: ' + (data.message || JSON.stringify(data)) + '\n\nブラウザのコンソール（F12）とGoogle Apps Scriptの実行ログを確認してください。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
             })
             .catch(error => {
                 console.error('❌ リクエスト送信エラー:', error);
-                alert('保存に失敗しました。\n\nブラウザのコンソール（F12）でエラーを確認してください。\n\nエラー: ' + error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+                console.error('エラー詳細:', error);
+                // CORSエラーの場合はno-corsモードで再試行
+                if (error.name === 'TypeError' || error.message.includes('CORS')) {
+                    console.log('⚠️ CORSエラーが発生したため、no-corsモードで再試行します');
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: requestBody
+                    })
+                    .then(() => {
+                        console.log('✅ no-corsモードでリクエスト送信完了');
+                        setTimeout(() => {
+                            loadEvents();
+                            alert('イベントを保存しました。\n\n⚠️ 実際に保存されたか確認してください：\n1. スプレッドシートの「イベント一覧」タブ\n2. Google Driveの指定フォルダ\n3. Google Apps Scriptの実行ログ');
+                            closeModal();
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnText;
+                        }, 3000);
+                    })
+                    .catch(noCorsError => {
+                        console.error('❌ no-corsモードでもエラー:', noCorsError);
+                        alert('保存に失敗しました。\n\nブラウザのコンソール（F12）でエラーを確認してください。\n\nエラー: ' + error.message);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    });
+                } else {
+                    alert('保存に失敗しました。\n\nブラウザのコンソール（F12）でエラーを確認してください。\n\nエラー: ' + error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
             });
         }
     </script>

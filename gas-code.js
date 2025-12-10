@@ -579,13 +579,15 @@ function doPost(e) {
         console.log("スプレッドシートID: " + SPREADSHEET_ID);
         
         var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
-        console.log("シート取得結果: " + (sheet ? "成功" : "失敗"));
+        console.log("📊 シート取得結果: " + (sheet ? "✅ 成功" : "❌ 失敗"));
+        console.log("📊 シート名: " + EVENT_SHEET_NAME);
+        console.log("📊 スプレッドシートの全シート名:", ss.getSheets().map(function(s) { return s.getName(); }));
       
       if (!sheet) {
-        console.log("シートが存在しないため、新規作成します");
+        console.log("📊 シートが存在しないため、新規作成します");
         // シートが存在しない場合は作成
         sheet = ss.insertSheet(EVENT_SHEET_NAME);
-        console.log("シートを作成しました: " + EVENT_SHEET_NAME);
+        console.log("✅ シートを作成しました: " + EVENT_SHEET_NAME);
         // ヘッダー行を追加
         sheet.appendRow([
           'ID',
@@ -605,7 +607,10 @@ function doPost(e) {
         var headerRange = sheet.getRange(1, 1, 1, 12);
         headerRange.setFontWeight('bold');
         headerRange.setBackground('#E8E8E8');
-        console.log("ヘッダー行を追加しました");
+        console.log("✅ ヘッダー行を追加しました");
+      } else {
+        console.log("✅ 既存のシートを使用します");
+        console.log("📊 シートの最終行: " + sheet.getLastRow());
       }
       
       var date = new Date();
@@ -668,11 +673,16 @@ function doPost(e) {
           dateStr
         ];
         
-        console.log("追加する行データ: " + JSON.stringify(rowData));
+        console.log("📝 追加する行データ: " + JSON.stringify(rowData));
+        console.log("📝 追加前の最終行: " + sheet.getLastRow());
+        
         sheet.appendRow(rowData);
         
-        console.log("イベント作成完了: ID=" + newId);
-        console.log("スプレッドシートの最終行: " + sheet.getLastRow());
+        console.log("✅ イベント作成完了: ID=" + newId);
+        console.log("📝 追加後の最終行: " + sheet.getLastRow());
+        console.log("📝 追加した行の内容を確認:");
+        var addedRow = sheet.getRange(sheet.getLastRow(), 1, 1, 12).getValues()[0];
+        console.log("📝 " + JSON.stringify(addedRow));
       }
       
       // イベント更新
