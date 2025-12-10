@@ -173,7 +173,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC_I5AZT7YyvXo5Vp6P7n0cphwBbcnKD4krmmbrASPkAuqPJPktSoU0T3w5yyBr-hK/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjY-vOIYgmla1n51j5TpjMzNFzgBJ9opry6pKuaJ1V4uAOcxFpCix_ucJkUjG27Pmv/exec";
         
         // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
         const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
@@ -513,6 +513,8 @@
 
         // イベントを保存
         function saveEvent(eventData, submitBtn, originalBtnText) {
+            console.log('保存するデータ:', eventData);
+            
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -520,15 +522,18 @@
                 body: JSON.stringify(eventData)
             })
             .then(() => {
-                alert('イベントを保存しました。');
-                closeModal();
-                loadEvents();
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+                // no-corsモードではレスポンスが取得できないため、少し待ってからイベント一覧を再読み込み
+                setTimeout(() => {
+                    loadEvents();
+                    alert('イベントを保存しました。');
+                    closeModal();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }, 1000);
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('保存に失敗しました。');
+                alert('保存に失敗しました。Google Apps Scriptのログを確認してください。\n\nエラー: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
             });

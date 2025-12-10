@@ -10,8 +10,13 @@ const SPREADSHEET_ID = "1le-REuPK_gpE0MCSEjua041W3kQsPfBcgFESarn3CeI";
 // 履歴書保存フォルダID
 const FOLDER_ID = "17eyeWRnUypn9ST1TJntPuN27j_AL5XmV"; 
 
-// イベント画像保存フォルダID（履歴書と同じフォルダを使用、必要に応じて変更）
-const EVENT_IMAGE_FOLDER_ID = "17eyeWRnUypn9ST1TJntPuN27j_AL5XmV";
+// イベント画像保存フォルダID（別フォルダに保存したい場合は、ここにフォルダIDを設定）
+// フォルダIDの取得方法：Google Driveでフォルダを開く → URLの最後の部分がフォルダID
+// 例：https://drive.google.com/drive/folders/【ここがフォルダID】?usp=sharing
+const EVENT_IMAGE_FOLDER_ID = "1ejbctTjCIUY4kk4qrOFjtIFhNdKcRTLC"; // イベント画像専用フォルダ
+
+// イベント一覧のスプレッドシートタブ名（新しいタブを作成する場合の名前）
+const EVENT_SHEET_NAME = "イベント一覧"; // ここを変更すればタブ名を変更できます
 
 // 通知先メールアドレス
 const NOTIFY_EMAIL = "pocopoco.fuchu@gmail.com"; 
@@ -155,11 +160,9 @@ function doPost(e) {
     console.log("action:", params.action);
     console.log("params のキー:", Object.keys(params));
     
-    // デバッグ：params全体をログ出力（reservationフォームの場合）
-    if (params.formType === 'reservation') {
-      console.log("=== 受信したparams全体 ===");
-      console.log(JSON.stringify(params, null, 2));
-    }
+    // デバッグ：params全体をログ出力
+    console.log("=== 受信したparams全体 ===");
+    console.log(JSON.stringify(params, null, 2));
     
     // スプレッドシートを開く
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -551,12 +554,16 @@ function doPost(e) {
 
     // ■パターンE：イベント管理（作成・更新・削除・アーカイブ）
     else if (params.action === 'createEvent' || params.action === 'updateEvent' || params.action === 'deleteEvent' || params.action === 'archiveEvent') {
-      console.log("イベント管理処理を開始: " + params.action);
-      var sheet = ss.getSheetByName('イベント一覧');
+      console.log("=== イベント管理処理を開始 ===");
+      console.log("action: " + params.action);
+      console.log("params: " + JSON.stringify(params));
+      
+      try {
+        var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
       
       if (!sheet) {
         // シートが存在しない場合は作成
-        sheet = ss.insertSheet('イベント一覧');
+        sheet = ss.insertSheet(EVENT_SHEET_NAME);
         // ヘッダー行を追加
         sheet.appendRow([
           'ID',
@@ -707,6 +714,20 @@ function doPost(e) {
         
         console.log("イベントアーカイブ完了: ID=" + eventId);
       }
+      
+      console.log("=== イベント管理処理完了 ===");
+      return output.setContent(JSON.stringify({ 
+        status: "success", 
+        message: "イベントの処理が完了しました" 
+      }));
+      } catch (error) {
+        console.error("イベント管理処理エラー:", error);
+        console.error("エラースタック:", error.stack);
+        return output.setContent(JSON.stringify({ 
+          status: "error", 
+          message: error.toString() 
+        }));
+      }
     }
 
     // ■パターンF：画像アップロード（JSON形式のBase64データ）
@@ -790,7 +811,7 @@ function doPost(e) {
 function getEvents(isArchived) {
   try {
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    var sheet = ss.getSheetByName('イベント一覧');
+    var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
     
     if (!sheet || sheet.getLastRow() < 2) {
       return [];
@@ -840,7 +861,7 @@ function getEvents(isArchived) {
 function getEventById(eventId) {
   try {
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    var sheet = ss.getSheetByName('イベント一覧');
+    var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
     
     if (!sheet || sheet.getLastRow() < 2) {
       return null;
