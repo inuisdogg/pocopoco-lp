@@ -178,7 +178,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjY-vOIYgmla1n51j5TpjMzNFzgBJ9opry6pKuaJ1V4uAOcxFpCix_ucJkUjG27Pmv/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHoDPkL4FgZudFYL-nWFBAFbnyKxzW_k18a6pGjU9Khdycz555PWKu9rKwFOJ18XSA/exec";
         
         // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
         const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
@@ -530,26 +530,40 @@
                 return;
             }
             
+            // リクエストボディを確認
+            const requestBody = JSON.stringify(eventData);
+            console.log('リクエストボディ:', requestBody);
+            console.log('リクエストボディの長さ:', requestBody.length);
+            
+            // ネットワークタブで確認できるように、リクエストを記録
+            console.group('📤 イベント保存リクエスト');
+            console.log('URL:', SCRIPT_URL);
+            console.log('Method: POST');
+            console.log('Headers:', { 'Content-Type': 'application/json' });
+            console.log('Body:', eventData);
+            console.groupEnd();
+            
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(eventData)
+                body: requestBody
             })
             .then(() => {
-                console.log('リクエスト送信完了');
+                console.log('✅ リクエスト送信完了（no-corsモードのためレスポンスは取得できません）');
+                console.log('⚠️ Google Apps Scriptの実行ログを確認してください');
                 // no-corsモードではレスポンスが取得できないため、少し待ってからイベント一覧を再読み込み
                 setTimeout(() => {
-                    console.log('イベント一覧を再読み込み');
+                    console.log('🔄 イベント一覧を再読み込み');
                     loadEvents();
-                    alert('イベントを保存しました。\n\nスプレッドシートとGoogle Driveを確認してください。');
+                    alert('イベントを保存しました。\n\n⚠️ 実際に保存されたか確認してください：\n1. スプレッドシートの「イベント一覧」タブ\n2. Google Driveの指定フォルダ\n3. Google Apps Scriptの実行ログ');
                     closeModal();
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnText;
-                }, 2000); // 2秒待つ
+                }, 3000); // 3秒待つ（GAS処理に時間がかかる場合があるため）
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('❌ リクエスト送信エラー:', error);
                 alert('保存に失敗しました。\n\nブラウザのコンソール（F12）でエラーを確認してください。\n\nエラー: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;

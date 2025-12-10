@@ -147,7 +147,12 @@ function doPost(e) {
     // どちらも取得できなかった場合（formTypeまたはactionがない場合）
     if (!params.formType && !params.action) {
       var errorMsg = "データを取得できませんでした。e.postData.contents と e.parameter の両方が空です。";
-      console.error("エラー: " + errorMsg);
+      console.error("❌ エラー: " + errorMsg);
+      console.error("e.postData の存在:", !!e.postData);
+      console.error("e.postData.contents の存在:", !!(e.postData && e.postData.contents));
+      console.error("e.postData.type:", e.postData ? e.postData.type : 'undefined');
+      console.error("e.parameter の存在:", !!e.parameter);
+      console.error("e.parameter のキー:", e.parameter ? Object.keys(e.parameter) : 'undefined');
       console.error("e の内容:", JSON.stringify(e));
       return output.setContent(JSON.stringify({ 
         status: "error", 
@@ -554,11 +559,13 @@ function doPost(e) {
 
     // ■パターンE：イベント管理（作成・更新・削除・アーカイブ）
     else if (params.action === 'createEvent' || params.action === 'updateEvent' || params.action === 'deleteEvent' || params.action === 'archiveEvent') {
-      console.log("=== イベント管理処理を開始 ===");
+      console.log("=== ✅ イベント管理処理を開始 ===");
       console.log("action: " + params.action);
+      console.log("params のキー: " + Object.keys(params));
       console.log("params: " + JSON.stringify(params));
       console.log("EVENT_SHEET_NAME: " + EVENT_SHEET_NAME);
       console.log("EVENT_IMAGE_FOLDER_ID: " + EVENT_IMAGE_FOLDER_ID);
+      console.log("SPREADSHEET_ID: " + SPREADSHEET_ID);
       
       try {
         // スプレッドシートは既に開かれている（doPostの最初で開いている）
@@ -736,14 +743,28 @@ function doPost(e) {
         console.log("イベントアーカイブ完了: ID=" + eventId);
       }
       
-      console.log("=== イベント管理処理完了 ===");
+      console.log("=== ✅ イベント管理処理完了 ===");
       return output.setContent(JSON.stringify({ 
         status: "success", 
         message: "イベントの処理が完了しました" 
       }));
       } catch (error) {
-        console.error("イベント管理処理エラー:", error);
+        console.error("❌ イベント管理処理エラー:", error);
+        console.error("エラーメッセージ:", error.toString());
         console.error("エラースタック:", error.stack);
+        // エラー通知メールを送信
+        try {
+          MailApp.sendEmail(
+            NOTIFY_EMAIL,
+            "【GASエラー】イベント管理処理でエラーが発生しました",
+            "イベント管理処理中にエラーが発生しました。\n\n" +
+            "action: " + (params.action || 'undefined') + "\n" +
+            "エラーメッセージ: " + error.toString() + "\n\n" +
+            "スタックトレース:\n" + error.stack
+          );
+        } catch (mailError) {
+          console.error("エラー通知メールの送信に失敗:", mailError.message);
+        }
         return output.setContent(JSON.stringify({ 
           status: "error", 
           message: error.toString() 
