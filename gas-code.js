@@ -618,30 +618,45 @@ function doPost(e) {
       
       // 画像がある場合は先にアップロード
       var imageUrl = params.imageUrl || '';
+      console.log("🖼️ 画像処理開始");
+      console.log("🖼️ params.imageBase64 の存在: " + !!(params.imageBase64));
+      console.log("🖼️ params.imageUrl の存在: " + !!(params.imageUrl));
+      
       if (params.imageBase64) {
-        console.log("画像アップロード処理を開始");
-        console.log("画像データの長さ: " + (params.imageBase64 ? params.imageBase64.length : 0));
+        console.log("🖼️ 画像アップロード処理を開始");
+        console.log("🖼️ 画像データの長さ: " + (params.imageBase64 ? params.imageBase64.length : 0));
+        console.log("🖼️ 画像ファイル名: " + (params.imageFileName || '未指定'));
+        console.log("🖼️ フォルダID: " + EVENT_IMAGE_FOLDER_ID);
+        
         try {
           var decoded = Utilities.base64Decode(params.imageBase64);
           var fileName = params.imageFileName || 'event_' + Date.now() + '.jpg';
           var blob = Utilities.newBlob(decoded, 'image/jpeg', fileName);
-          console.log("Blob作成完了: " + fileName);
+          console.log("✅ Blob作成完了: " + fileName + " (" + blob.getBytes().length + " bytes)");
           
           var folder = DriveApp.getFolderById(EVENT_IMAGE_FOLDER_ID);
-          console.log("フォルダ取得完了: " + EVENT_IMAGE_FOLDER_ID);
+          console.log("✅ フォルダ取得完了: " + EVENT_IMAGE_FOLDER_ID);
+          console.log("📁 フォルダ名: " + folder.getName());
+          
           var file = folder.createFile(blob);
-          console.log("ファイル作成完了: " + file.getName());
+          console.log("✅ ファイル作成完了: " + file.getName());
+          console.log("📁 ファイルID: " + file.getId());
+          
           file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
           imageUrl = file.getUrl().replace('/file/d/', '/uc?export=view&id=').replace('/view?usp=sharing', '');
           
-          console.log("画像アップロード成功: " + imageUrl);
+          console.log("✅ 画像アップロード成功");
+          console.log("🖼️ 画像URL: " + imageUrl);
         } catch (error) {
-          console.error("画像アップロードエラー:", error);
-          console.error("エラースタック:", error.stack);
+          console.error("❌ 画像アップロードエラー:", error);
+          console.error("❌ エラーメッセージ:", error.toString());
+          console.error("❌ エラースタック:", error.stack);
         }
       } else {
-        console.log("画像データなし");
+        console.log("ℹ️ 画像データなし（スキップ）");
       }
+      
+      console.log("🖼️ 最終的なimageUrl: " + (imageUrl || '(空)'));
       
       // イベント作成
       if (params.action === 'createEvent') {
