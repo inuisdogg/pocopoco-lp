@@ -561,9 +561,8 @@ function doPost(e) {
       console.log("EVENT_IMAGE_FOLDER_ID: " + EVENT_IMAGE_FOLDER_ID);
       
       try {
-        // スプレッドシートを開く
-        var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-        console.log("スプレッドシートを開きました: " + SPREADSHEET_ID);
+        // スプレッドシートは既に開かれている（doPostの最初で開いている）
+        console.log("スプレッドシートID: " + SPREADSHEET_ID);
         
         var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
         console.log("シート取得結果: " + (sheet ? "成功" : "失敗"));
