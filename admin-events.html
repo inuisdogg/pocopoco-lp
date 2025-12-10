@@ -178,7 +178,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHoDPkL4FgZudFYL-nWFBAFbnyKxzW_k18a6pGjU9Khdycz555PWKu9rKwFOJ18XSA/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyaSsSxPDcF3wFQ9TTeUqzFNxiC1I7TGiVfv9ceLNp9UD_aEhVPyP0o0uADMrFrHft/exec";
         
         // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
         const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
@@ -242,18 +242,26 @@
 
         // イベント一覧を読み込む
         function loadEvents() {
-            fetch(SCRIPT_URL + '?action=getEvents&isArchived=' + (isArchiveMode ? 'true' : 'false'))
-                .then(response => response.json())
+            const url = SCRIPT_URL + '?action=getEvents&isArchived=' + (isArchiveMode ? 'true' : 'false');
+            console.log('📥 イベント一覧を取得:', url);
+            
+            fetch(url)
+                .then(response => {
+                    console.log('📥 レスポンス受信:', response.status, response.statusText);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('📥 取得したデータ:', data);
                     if (data.status === 'success') {
+                        console.log('✅ イベント取得成功:', data.events ? data.events.length + '件' : '0件');
                         renderEvents(data.events || [], isArchiveMode);
                     } else {
-                        console.error('イベントの取得に失敗しました:', data.message);
+                        console.error('❌ イベントの取得に失敗しました:', data.message);
                         renderEvents([], isArchiveMode);
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('❌ イベント取得エラー:', error);
                     renderEvents([], isArchiveMode);
                 });
         }
@@ -489,6 +497,11 @@
 
             // 時間を結合
             eventData.time = eventData.startTime + '-' + eventData.endTime;
+            
+            // デバッグ：送信前のデータを確認
+            console.log('=== 📝 フォーム送信前のデータ確認 ===');
+            console.log('eventData:', eventData);
+            console.log('画像ファイル:', imageFile ? imageFile.name + ' (' + imageFile.size + ' bytes)' : 'なし');
 
             const submitBtn = document.getElementById('submitBtn');
             const originalBtnText = submitBtn.innerHTML;

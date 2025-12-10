@@ -809,8 +809,11 @@ function doPost(e) {
 
     // 未対応のformTypeの場合
     else {
-      var errorMsg = "未対応のフォーム種別です: " + (params.formType || 'undefined');
-      console.error("エラー: " + errorMsg);
+      var errorMsg = "未対応のフォーム種別です: " + (params.formType || 'undefined') + ", action: " + (params.action || 'undefined');
+      console.error("❌ エラー: " + errorMsg);
+      console.error("params の全キー:", Object.keys(params));
+      console.error("params の内容:", JSON.stringify(params));
+      console.error("dataSource:", dataSource);
       return output.setContent(JSON.stringify({ 
         status: "error", 
         message: errorMsg 
