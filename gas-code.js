@@ -103,14 +103,16 @@ function doPost(e) {
     }
     
     // 方法2: e.parameterから取得（フォールバック）
-    if (!params.formType && e && e.parameter) {
-      console.log("e.parameter から取得を試行");
+    if (!params.formType && !params.action && e && e.parameter) {
+      console.log("📥 e.parameter から取得を試行");
       console.log("e.parameter のキー:", Object.keys(e.parameter));
       
       // e.parameterは文字列なので、必要に応じて変換
       params = e.parameter;
       dataSource = "parameter";
-      console.log("✓ e.parameter から取得成功");
+      console.log("✅ e.parameter から取得成功");
+      console.log("取得したparams.action:", params.action);
+      console.log("取得したparams.formType:", params.formType);
     }
     
     // 画像アップロードの処理（FormData形式）
