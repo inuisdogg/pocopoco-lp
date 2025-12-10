@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>イベント一覧・申し込み | 児童発達支援 pocopoco</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
+        h1, h2 { font-family: 'Zen Maru Gothic', sans-serif; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ヘッダー -->
+    <header class="bg-white/90 backdrop-blur-sm fixed top-0 w-full z-40 shadow-sm border-b border-stone-200">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-brand-main text-xl tracking-wider font-maru hover:opacity-80 transition">
+                <img src="images/logo.png" alt="pocopoco" class="h-9">
+            </a>
+            <a href="index.html" class="text-sm text-gray-500 hover:text-brand-main transition">
+                <i class="fas fa-arrow-left mr-1"></i>TOPへ戻る
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-20 pb-12 px-4 max-w-md mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-brand-main mb-2">
+                <i class="fas fa-calendar-alt text-brand-accent mr-2"></i>イベント一覧
+            </h1>
+            <p class="text-sm text-gray-600">
+                施設内で開催する週1回のイベントです。<br>
+                お気軽にご参加ください。
+            </p>
+        </div>
+
+        <!-- イベント一覧 -->
+        <div id="eventsList" class="space-y-4 mb-8">
+            <!-- イベントカードはJavaScriptで動的に生成 -->
+        </div>
+
+        <!-- 申し込みフォームモーダル（初期は非表示） -->
+        <div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-brand-main">イベント申し込み</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="eventForm" class="p-6 space-y-6">
+                    <!-- 選択されたイベント情報 -->
+                    <div id="selectedEventInfo" class="bg-brand-light p-4 rounded-lg border border-brand-main/20">
+                        <!-- JavaScriptで動的に生成 -->
+                    </div>
+
+                    <!-- 保護者氏名 -->
+                    <div>
+                        <label for="parentName" class="block text-sm font-bold text-gray-700 mb-1">保護者様のお名前 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="text" id="parentName" name="parentName" required placeholder="例：山田 花子" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- お子様氏名 -->
+                    <div>
+                        <label for="childName" class="block text-sm font-bold text-gray-700 mb-1">お子さまのお名前 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="text" id="childName" name="childName" required placeholder="例：山田 太郎" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 年齢 -->
+                    <div>
+                        <label for="childAge" class="block text-sm font-bold text-gray-700 mb-1">お子さまの年齢 <span class="text-red-500 text-xs">*必須</span></label>
+                        <select id="childAge" name="childAge" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                            <option value="">選択してください</option>
+                            <option value="0歳">0歳</option>
+                            <option value="1歳">1歳</option>
+                            <option value="2歳">2歳</option>
+                            <option value="3歳 (年少)">3歳 (年少)</option>
+                            <option value="4歳 (年中)">4歳 (年中)</option>
+                            <option value="5歳 (年長)">5歳 (年長)</option>
+                            <option value="6歳 (就学前)">6歳 (就学前)</option>
+                        </select>
+                    </div>
+
+                    <!-- メールアドレス -->
+                    <div>
+                        <label for="email" class="block text-sm font-bold text-gray-700 mb-1">メールアドレス <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="email" id="email" name="email" required placeholder="example@email.com" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 電話番号 -->
+                    <div>
+                        <label for="tel" class="block text-sm font-bold text-gray-700 mb-1">電話番号 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="tel" id="tel" name="tel" required placeholder="090-0000-0000" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 参加人数 -->
+                    <div>
+                        <label for="participants" class="block text-sm font-bold text-gray-700 mb-1">参加人数 <span class="text-red-500 text-xs">*必須</span></label>
+                        <select id="participants" name="participants" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                            <option value="">選択してください</option>
+                            <option value="1名">1名</option>
+                            <option value="2名">2名</option>
+                            <option value="3名">3名</option>
+                            <option value="4名以上">4名以上</option>
+                        </select>
+                    </div>
+
+                    <!-- その他ご質問など -->
+                    <div>
+                        <label for="message" class="block text-sm font-bold text-gray-700 mb-1">その他ご質問など <span class="text-gray-400 text-xs">(任意)</span></label>
+                        <textarea id="message" name="message" rows="3" placeholder="（例）アレルギーについて" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3"></textarea>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" id="submitBtn" class="w-full text-white bg-brand-cta hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-bold rounded-full text-lg px-5 py-4 text-center shadow-lg transition transform hover:-translate-y-1">
+                            申し込む <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                        <p class="text-center text-xs text-gray-400 mt-3">※個人情報は厳重に管理し、イベント対応以外には使用いたしません。</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 送信完了メッセージ (初期は非表示) -->
+        <div id="successMessage" class="hidden bg-white p-8 rounded-xl shadow-md text-center">
+            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-3xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-brand-main mb-2">申し込み完了しました</h2>
+            <p class="text-sm text-gray-600 mb-6">
+                イベントへのお申し込みありがとうございます。<br>
+                内容を確認次第、担当者よりご連絡いたします。
+            </p>
+            <div class="space-y-2">
+                <button id="backToEvents" class="block w-full bg-brand-main text-white font-bold py-3 rounded-full hover:bg-brown-700 transition">
+                    イベント一覧に戻る
+                </button>
+                <a href="index.html" class="block w-full bg-gray-100 text-gray-700 font-bold py-3 rounded-full hover:bg-gray-200 transition">
+                    TOPへ戻る
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Google Apps Script URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC_I5AZT7YyvXo5Vp6P7n0cphwBbcnKD4krmmbrASPkAuqPJPktSoU0T3w5yyBr-hK/exec";
+
+        let eventsData = [];
+        let selectedEvent = null;
+
+        // イベントデータを取得
+        function loadEvents() {
+            fetch(SCRIPT_URL + '?action=getEvents&isArchived=false')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        eventsData = data.events || [];
+                        renderEvents();
+                    } else {
+                        console.error('イベントの取得に失敗しました:', data.message);
+                        eventsData = [];
+                        renderEvents();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    eventsData = [];
+                    renderEvents();
+                });
+        }
+
+        // 日付をフォーマット
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const weekday = weekdays[date.getDay()];
+            return `${month}月${day}日（${weekday}）`;
+        }
+
+        // イベントカードを生成
+        function renderEvents() {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '';
+
+            if (eventsData.length === 0) {
+                eventsList.innerHTML = '<div class="text-center text-gray-500 py-8">現在開催予定のイベントはありません</div>';
+                return;
+            }
+
+            // 開催日でソート（古い順）
+            const sortedEvents = [...eventsData].sort((a, b) => {
+                return new Date(a.date) - new Date(b.date);
+            });
+
+            sortedEvents.forEach(event => {
+                const availableSlots = event.capacity - (event.currentParticipants || 0);
+                const isFull = availableSlots <= 0;
+                const isAlmostFull = availableSlots <= 2;
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition';
+                
+                card.innerHTML = `
+                    ${event.imageUrl ? `
+                    <div class="w-full h-48 bg-gray-200 overflow-hidden">
+                        <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-full object-cover">
+                    </div>
+                    ` : ''}
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                                    <span class="bg-brand-accent text-white text-xs px-2 py-1 rounded-full font-bold">${event.category}</span>
+                                    ${isFull ? '<span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-bold">満員</span>' : ''}
+                                    ${isAlmostFull && !isFull ? '<span class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full font-bold">残りわずか</span>' : ''}
+                                </div>
+                                <h3 class="text-lg font-bold text-brand-main mb-2">${event.title}</h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">${event.description}</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-calendar-alt text-brand-cta mr-2 w-5"></i>
+                                <span>${formatDate(event.date)}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-clock text-brand-cta mr-2 w-5"></i>
+                                <span>${event.time}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-users text-brand-cta mr-2 w-5"></i>
+                                <span>定員: ${event.capacity}名 / 残り${availableSlots}名</span>
+                            </div>
+                        </div>
+                        <button 
+                            ${isFull ? 'disabled' : ''} 
+                            class="w-full ${isFull ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-brand-cta text-white hover:bg-orange-600'} font-bold py-3 rounded-full transition transform ${isFull ? '' : 'hover:-translate-y-1'} event-register-btn"
+                            data-event-id="${event.id}">
+                            ${isFull ? '満員' : 'このイベントに申し込む'}
+                            <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                `;
+
+                eventsList.appendChild(card);
+            });
+
+            // 申し込みボタンのイベントリスナーを設定
+            document.querySelectorAll('.event-register-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const eventId = parseInt(this.dataset.eventId);
+                    openEventModal(eventId);
+                });
+            });
+        }
+
+        // モーダルを開く
+        function openEventModal(eventId) {
+            selectedEvent = eventsData.find(e => e.id === eventId);
+            if (!selectedEvent) return;
+
+            const modal = document.getElementById('eventModal');
+            const selectedEventInfo = document.getElementById('selectedEventInfo');
+            
+            selectedEventInfo.innerHTML = `
+                <h3 class="font-bold text-lg text-brand-main mb-2">${selectedEvent.title}</h3>
+                <div class="space-y-1 text-sm text-gray-600">
+                    <div><i class="fas fa-calendar-alt text-brand-cta mr-2"></i>${formatDate(selectedEvent.date)}</div>
+                    <div><i class="fas fa-clock text-brand-cta mr-2"></i>${selectedEvent.time}</div>
+                    <div><i class="fas fa-users text-brand-cta mr-2"></i>定員: ${selectedEvent.capacity}名</div>
+                </div>
+            `;
+
+            // フォームをリセット
+            document.getElementById('eventForm').reset();
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // モーダルを閉じる
+        function closeEventModal() {
+            const modal = document.getElementById('eventModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            selectedEvent = null;
+        }
+
+        // モーダル外をクリックで閉じる
+        document.getElementById('eventModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEventModal();
+            }
+        });
+
+        // 閉じるボタン
+        document.getElementById('closeModal')?.addEventListener('click', closeEventModal);
+
+        // フォーム送信
+        document.getElementById('eventForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!selectedEvent) {
+                alert('イベントが選択されていません。');
+                return;
+            }
+
+            if (!SCRIPT_URL) {
+                alert('システム管理者へ連絡：Google Apps ScriptのURLが設定されていません。');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 送信中...';
+
+            const formData = new FormData(this);
+            const data = {
+                formType: 'event',
+                eventId: selectedEvent.id,
+                eventTitle: selectedEvent.title,
+                eventDate: selectedEvent.date,
+                eventTime: selectedEvent.time,
+                parentName: formData.get('parentName'),
+                childName: formData.get('childName'),
+                childAge: formData.get('childAge'),
+                email: formData.get('email'),
+                tel: formData.get('tel'),
+                participants: formData.get('participants'),
+                message: formData.get('message') || ''
+            };
+
+            // GASへ送信
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // 成功時の処理
+                document.getElementById('eventModal').classList.add('hidden');
+                document.getElementById('eventsList').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+                document.body.style.overflow = 'auto';
+                window.scrollTo(0, 0);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('送信に失敗しました。もう一度お試しください。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+
+        // イベント一覧に戻る
+        document.getElementById('backToEvents')?.addEventListener('click', function() {
+            document.getElementById('successMessage').classList.add('hidden');
+            document.getElementById('eventsList').classList.remove('hidden');
+            renderEvents(); // イベント一覧を再描画（残り人数を更新するため）
+        });
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEvents();
+        });
+    </script>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs mt-12">
+        <div class="mb-4 space-x-4">
+            <a href="index.html" class="hover:text-white transition">トップページ</a>
+            <span class="text-gray-600">|</span>
+            <a href="recruit.html" class="hover:text-white transition">採用情報</a>
+            <span class="text-gray-600">|</span>
+            <a href="sitter.html" class="hover:text-white transition">ベビーシッター</a>
+            <span class="text-gray-600">|</span>
+            <a href="program.html" class="hover:text-white transition">支援プログラム・自己評価</a>
+        </div>
+        <p class="mb-2">児童発達支援 pocopoco</p>
+        <p class="mb-4">〒183-0052　東京都府中市新町1丁目71番地７</p>
+        <p class="mb-1">運営会社：株式会社INU</p>
+        <p>&copy; 2025 pocopoco All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+

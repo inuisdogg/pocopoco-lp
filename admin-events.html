@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>イベント管理画面 | 児童発達支援 pocopoco</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
+        h1, h2 { font-family: 'Zen Maru Gothic', sans-serif; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ヘッダー -->
+    <header class="bg-white/90 backdrop-blur-sm fixed top-0 w-full z-40 shadow-sm border-b border-stone-200">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-brand-main text-xl tracking-wider font-maru hover:opacity-80 transition">
+                <img src="images/logo.png" alt="pocopoco" class="h-9">
+            </a>
+            <div class="flex gap-2">
+                <a href="events.html" class="text-sm text-gray-500 hover:text-brand-main transition">
+                    <i class="fas fa-calendar-alt mr-1"></i>イベント一覧
+                </a>
+                <button id="logoutBtn" class="text-sm text-red-500 hover:text-red-700 transition">
+                    <i class="fas fa-sign-out-alt mr-1"></i>ログアウト
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20 pb-12 px-4 max-w-md mx-auto">
+        <!-- ログイン画面 -->
+        <div id="loginScreen" class="bg-white p-8 rounded-xl shadow-md">
+            <h1 class="text-2xl font-bold text-brand-main mb-6 text-center">イベント管理画面</h1>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="password" class="block text-sm font-bold text-gray-700 mb-1">パスワード</label>
+                    <input type="password" id="password" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                </div>
+                <button type="submit" class="w-full bg-brand-main text-white font-bold py-3 rounded-full hover:bg-brown-700 transition">
+                    ログイン
+                </button>
+            </form>
+        </div>
+
+        <!-- 管理画面（初期は非表示） -->
+        <div id="adminScreen" class="hidden">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-brand-main mb-2">
+                    <i class="fas fa-cog text-brand-accent mr-2"></i>イベント管理
+                </h1>
+            </div>
+
+            <!-- タブ切り替え -->
+            <div class="flex gap-2 mb-6 bg-white rounded-lg p-1 shadow-sm">
+                <button id="activeTab" class="flex-1 py-2 px-4 rounded-md bg-brand-main text-white font-bold text-sm transition">
+                    開催予定
+                </button>
+                <button id="archiveTab" class="flex-1 py-2 px-4 rounded-md bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition">
+                    過去のイベント
+                </button>
+            </div>
+
+            <!-- 新規イベント追加ボタン -->
+            <button id="addEventBtn" class="w-full bg-brand-cta text-white font-bold py-3 rounded-full shadow-md hover:bg-orange-600 transition mb-6">
+                <i class="fas fa-plus mr-2"></i>新規イベントを追加
+            </button>
+
+            <!-- イベント一覧 -->
+            <div id="eventsList" class="space-y-4">
+                <!-- JavaScriptで動的に生成 -->
+            </div>
+
+            <!-- アーカイブイベント一覧 -->
+            <div id="archivedEventsList" class="space-y-4 hidden">
+                <!-- JavaScriptで動的に生成 -->
+            </div>
+        </div>
+
+        <!-- イベント編集モーダル -->
+        <div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                    <h2 id="modalTitle" class="text-xl font-bold text-brand-main">新規イベント追加</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="eventForm" class="p-6 space-y-6">
+                    <!-- イベント画像 -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">イベント画像 <span class="text-gray-400 text-xs">(任意)</span></label>
+                        <div id="imagePreview" class="mb-2 hidden">
+                            <img id="previewImg" src="" alt="プレビュー" class="w-full h-48 object-cover rounded-lg border border-gray-300">
+                        </div>
+                        <input type="file" id="eventImage" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                        <p class="text-xs text-gray-500 mt-1">※画像は自動的にGoogle Driveに保存されます</p>
+                    </div>
+
+                    <!-- イベント名 -->
+                    <div>
+                        <label for="eventTitle" class="block text-sm font-bold text-gray-700 mb-1">イベント名 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="text" id="eventTitle" required placeholder="例：木育ワークショップ" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- カテゴリ -->
+                    <div>
+                        <label for="eventCategory" class="block text-sm font-bold text-gray-700 mb-1">カテゴリ <span class="text-red-500 text-xs">*必須</span></label>
+                        <select id="eventCategory" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                            <option value="">選択してください</option>
+                            <option value="木育">木育</option>
+                            <option value="音楽">音楽</option>
+                            <option value="ことば">ことば</option>
+                            <option value="運動">運動</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+
+                    <!-- 説明 -->
+                    <div>
+                        <label for="eventDescription" class="block text-sm font-bold text-gray-700 mb-1">説明 <span class="text-red-500 text-xs">*必須</span></label>
+                        <textarea id="eventDescription" required rows="3" placeholder="イベントの詳細説明を入力してください" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3"></textarea>
+                    </div>
+
+                    <!-- 開催日 -->
+                    <div>
+                        <label for="eventDate" class="block text-sm font-bold text-gray-700 mb-1">開催日 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="date" id="eventDate" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 開催時間 -->
+                    <div>
+                        <label for="eventTime" class="block text-sm font-bold text-gray-700 mb-1">開催時間 <span class="text-red-500 text-xs">*必須</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="time" id="eventStartTime" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                            <input type="time" id="eventEndTime" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                        </div>
+                    </div>
+
+                    <!-- 定員 -->
+                    <div>
+                        <label for="eventCapacity" class="block text-sm font-bold text-gray-700 mb-1">定員 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="number" id="eventCapacity" required min="1" placeholder="例：10" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 現在の参加者数 -->
+                    <div>
+                        <label for="eventCurrentParticipants" class="block text-sm font-bold text-gray-700 mb-1">現在の参加者数 <span class="text-gray-400 text-xs">(任意)</span></label>
+                        <input type="number" id="eventCurrentParticipants" min="0" value="0" placeholder="0" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <div class="pt-4 space-y-2">
+                        <button type="submit" id="submitBtn" class="w-full text-white bg-brand-cta hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-bold rounded-full text-lg px-5 py-4 text-center shadow-lg transition">
+                            <i class="fas fa-save mr-2"></i>保存
+                        </button>
+                        <button type="button" id="cancelBtn" class="w-full bg-gray-100 text-gray-700 font-bold py-3 rounded-full hover:bg-gray-200 transition">
+                            キャンセル
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Google Apps Script URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC_I5AZT7YyvXo5Vp6P7n0cphwBbcnKD4krmmbrASPkAuqPJPktSoU0T3w5yyBr-hK/exec";
+        
+        // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
+        const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
+        
+        let currentEditingEventId = null;
+        let isArchiveMode = false;
+
+        // ログイン処理
+        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showAdminScreen();
+            } else {
+                alert('パスワードが正しくありません。');
+            }
+        });
+
+        // ログアウト処理
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
+            sessionStorage.removeItem('adminLoggedIn');
+            location.reload();
+        });
+
+        // 管理画面を表示
+        function showAdminScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('adminScreen').classList.remove('hidden');
+            loadEvents();
+        }
+
+        // 初期化時にログイン状態を確認
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            showAdminScreen();
+        }
+
+        // タブ切り替え
+        document.getElementById('activeTab')?.addEventListener('click', function() {
+            isArchiveMode = false;
+            this.classList.add('bg-brand-main', 'text-white');
+            this.classList.remove('bg-gray-100', 'text-gray-700');
+            document.getElementById('archiveTab').classList.remove('bg-brand-main', 'text-white');
+            document.getElementById('archiveTab').classList.add('bg-gray-100', 'text-gray-700');
+            document.getElementById('eventsList').classList.remove('hidden');
+            document.getElementById('archivedEventsList').classList.add('hidden');
+            loadEvents();
+        });
+
+        document.getElementById('archiveTab')?.addEventListener('click', function() {
+            isArchiveMode = true;
+            this.classList.add('bg-brand-main', 'text-white');
+            this.classList.remove('bg-gray-100', 'text-gray-700');
+            document.getElementById('activeTab').classList.remove('bg-brand-main', 'text-white');
+            document.getElementById('activeTab').classList.add('bg-gray-100', 'text-gray-700');
+            document.getElementById('eventsList').classList.add('hidden');
+            document.getElementById('archivedEventsList').classList.remove('hidden');
+            loadEvents();
+        });
+
+        // イベント一覧を読み込む
+        function loadEvents() {
+            fetch(SCRIPT_URL + '?action=getEvents&isArchived=' + (isArchiveMode ? 'true' : 'false'))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        renderEvents(data.events || [], isArchiveMode);
+                    } else {
+                        console.error('イベントの取得に失敗しました:', data.message);
+                        renderEvents([], isArchiveMode);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    renderEvents([], isArchiveMode);
+                });
+        }
+
+        // イベントを描画
+        function renderEvents(events, isArchived) {
+            const container = isArchived ? document.getElementById('archivedEventsList') : document.getElementById('eventsList');
+            container.innerHTML = '';
+
+            if (events.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">イベントがありません</div>';
+                return;
+            }
+
+            events.forEach(event => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-200';
+                
+                const availableSlots = event.capacity - (event.currentParticipants || 0);
+                const isFull = availableSlots <= 0;
+                
+                card.innerHTML = `
+                    ${event.imageUrl ? `
+                    <div class="w-full h-48 bg-gray-200 overflow-hidden">
+                        <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-full object-cover">
+                    </div>
+                    ` : ''}
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                                    <span class="bg-brand-accent text-white text-xs px-2 py-1 rounded-full font-bold">${event.category}</span>
+                                    ${isFull ? '<span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-bold">満員</span>' : ''}
+                                    ${isArchived ? '<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-bold">終了</span>' : ''}
+                                </div>
+                                <h3 class="text-lg font-bold text-brand-main mb-2">${event.title}</h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">${event.description}</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-calendar-alt text-brand-cta mr-2 w-5"></i>
+                                <span>${formatDate(event.date)}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-clock text-brand-cta mr-2 w-5"></i>
+                                <span>${event.time}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-users text-brand-cta mr-2 w-5"></i>
+                                <span>定員: ${event.capacity}名 / 参加: ${event.currentParticipants || 0}名</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            ${!isArchived ? `
+                            <button class="flex-1 bg-brand-main text-white font-bold py-2 rounded-lg hover:bg-brown-700 transition edit-event-btn" data-event-id="${event.id}">
+                                <i class="fas fa-edit mr-1"></i>編集
+                            </button>
+                            <button class="flex-1 bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition archive-event-btn" data-event-id="${event.id}">
+                                <i class="fas fa-archive mr-1"></i>アーカイブ
+                            </button>
+                            ` : ''}
+                            <button class="flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition delete-event-btn" data-event-id="${event.id}">
+                                <i class="fas fa-trash mr-1"></i>削除
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // イベントリスナーを設定
+            document.querySelectorAll('.edit-event-btn').forEach(btn => {
+                btn.addEventListener('click', () => editEvent(parseInt(btn.dataset.eventId)));
+            });
+
+            document.querySelectorAll('.archive-event-btn').forEach(btn => {
+                btn.addEventListener('click', () => archiveEvent(parseInt(btn.dataset.eventId)));
+            });
+
+            document.querySelectorAll('.delete-event-btn').forEach(btn => {
+                btn.addEventListener('click', () => deleteEvent(parseInt(btn.dataset.eventId)));
+            });
+        }
+
+        // 日付をフォーマット
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const weekday = weekdays[date.getDay()];
+            return `${month}月${day}日（${weekday}）`;
+        }
+
+        // 新規イベント追加
+        document.getElementById('addEventBtn')?.addEventListener('click', function() {
+            currentEditingEventId = null;
+            document.getElementById('modalTitle').textContent = '新規イベント追加';
+            document.getElementById('eventForm').reset();
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('eventModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // イベント編集
+        function editEvent(eventId) {
+            fetch(SCRIPT_URL + '?action=getEvent&eventId=' + eventId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.event) {
+                        const event = data.event;
+                        currentEditingEventId = eventId;
+                        document.getElementById('modalTitle').textContent = 'イベント編集';
+                        document.getElementById('eventTitle').value = event.title;
+                        document.getElementById('eventCategory').value = event.category;
+                        document.getElementById('eventDescription').value = event.description;
+                        document.getElementById('eventDate').value = event.date;
+                        const [startTime, endTime] = event.time.split('-');
+                        document.getElementById('eventStartTime').value = startTime.trim();
+                        document.getElementById('eventEndTime').value = endTime.trim();
+                        document.getElementById('eventCapacity').value = event.capacity;
+                        document.getElementById('eventCurrentParticipants').value = event.currentParticipants || 0;
+                        
+                        if (event.imageUrl) {
+                            document.getElementById('previewImg').src = event.imageUrl;
+                            document.getElementById('imagePreview').classList.remove('hidden');
+                        } else {
+                            document.getElementById('imagePreview').classList.add('hidden');
+                        }
+                        
+                        document.getElementById('eventModal').classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        alert('イベントの取得に失敗しました。');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('イベントの取得に失敗しました。');
+                });
+        }
+
+        // イベントをアーカイブ
+        function archiveEvent(eventId) {
+            if (!confirm('このイベントをアーカイブしますか？')) return;
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'archiveEvent',
+                    eventId: eventId
+                })
+            })
+            .then(() => {
+                alert('イベントをアーカイブしました。');
+                loadEvents();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('アーカイブに失敗しました。');
+            });
+        }
+
+        // イベントを削除
+        function deleteEvent(eventId) {
+            if (!confirm('このイベントを削除しますか？この操作は取り消せません。')) return;
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'deleteEvent',
+                    eventId: eventId
+                })
+            })
+            .then(() => {
+                alert('イベントを削除しました。');
+                loadEvents();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('削除に失敗しました。');
+            });
+        }
+
+        // モーダルを閉じる
+        function closeModal() {
+            document.getElementById('eventModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentEditingEventId = null;
+            document.getElementById('eventForm').reset();
+            document.getElementById('imagePreview').classList.add('hidden');
+        }
+
+        document.getElementById('closeModal')?.addEventListener('click', closeModal);
+        document.getElementById('cancelBtn')?.addEventListener('click', closeModal);
+
+        // 画像プレビュー
+        document.getElementById('eventImage')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // フォーム送信
+        document.getElementById('eventForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const imageFile = document.getElementById('eventImage').files[0];
+            const eventData = {
+                action: currentEditingEventId ? 'updateEvent' : 'createEvent',
+                eventId: currentEditingEventId,
+                title: document.getElementById('eventTitle').value,
+                category: document.getElementById('eventCategory').value,
+                description: document.getElementById('eventDescription').value,
+                date: document.getElementById('eventDate').value,
+                startTime: document.getElementById('eventStartTime').value,
+                endTime: document.getElementById('eventEndTime').value,
+                capacity: parseInt(document.getElementById('eventCapacity').value),
+                currentParticipants: parseInt(document.getElementById('eventCurrentParticipants').value) || 0
+            };
+
+            // 時間を結合
+            eventData.time = eventData.startTime + '-' + eventData.endTime;
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 保存中...';
+
+            // 画像がある場合はBase64エンコードして一緒に送信
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Data = e.target.result.split(',')[1]; // data:image/jpeg;base64, の部分を除去
+                    eventData.imageBase64 = base64Data;
+                    eventData.imageFileName = imageFile.name;
+                    saveEvent(eventData, submitBtn, originalBtnText);
+                };
+                reader.onerror = function() {
+                    alert('画像の読み込みに失敗しました。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                // 画像がない場合は直接保存
+                saveEvent(eventData, submitBtn, originalBtnText);
+            }
+        });
+
+        // イベントを保存
+        function saveEvent(eventData, submitBtn, originalBtnText) {
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eventData)
+            })
+            .then(() => {
+                alert('イベントを保存しました。');
+                closeModal();
+                loadEvents();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('保存に失敗しました。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        }
+    </script>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs mt-12">
+        <p>&copy; 2025 pocopoco All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+
