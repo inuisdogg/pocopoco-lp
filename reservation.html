@@ -213,7 +213,7 @@
     <script>
         // 【重要】ここにGASのウェブアプリURLを貼り付けてください
         // 例: const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxO7NAXqG1VUdMH9teFHRjz7Z8zyfyG7FC7Hm2NBO4e6vrA8w6S2GU1SGe_4ll68pU/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbww-f0JD_jVFzTNIVAYfFwNDeuj8kwJUc338oZBhyU4tVQVuATIOo329KqL0thjmaA_/exec"; 
 
         // DOMContentLoadedで初期化
         document.addEventListener('DOMContentLoaded', function() {
@@ -657,12 +657,28 @@
                             date: dt.date,
                             time: dt.time,
                             end: dt.end,
+                            dateLabel: dt.dateLabel,
+                            timeLabel: dt.timeLabel,
                             displayText: dt.displayText
                         }));
                         data.selectedDateTimesText = selectedDateTimes.map(dt => dt.displayText).join('、');
+                        
+                        // デバッグログ
+                        console.log('送信する候補日時データ:', {
+                            selectedDateTimes: data.selectedDateTimes,
+                            selectedDateTimesText: data.selectedDateTimesText
+                        });
+                    } else {
+                        console.log('候補日時が選択されていません');
                     }
                     
                     data.formType = 'reservation';
+
+                    // 送信前の最終確認ログ
+                    console.log('=== 送信データ全体 ===');
+                    console.log(JSON.stringify(data, null, 2));
+                    console.log('selectedDateTimesText:', data.selectedDateTimesText);
+                    console.log('selectedDateTimes:', data.selectedDateTimes);
 
                     // GASへ送信
                     fetch(SCRIPT_URL, {

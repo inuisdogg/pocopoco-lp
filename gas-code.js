@@ -39,6 +39,16 @@ function doPost(e) {
         params = JSON.parse(e.postData.contents);
         dataSource = "postData.contents";
         console.log("✓ postData.contents から取得成功");
+        
+        // ネストされた配列が文字列になっている可能性があるため、再パースを試行
+        if (params.selectedDateTimes && typeof params.selectedDateTimes === 'string') {
+          try {
+            params.selectedDateTimes = JSON.parse(params.selectedDateTimes);
+            console.log("✓ selectedDateTimes を再パースしました");
+          } catch (e) {
+            console.log("selectedDateTimes の再パースに失敗:", e.message);
+          }
+        }
       } catch (parseError) {
         console.error("JSONパースエラー:", parseError.toString());
         // パースに失敗した場合は次の方法を試す
@@ -71,6 +81,12 @@ function doPost(e) {
     console.log("formType:", params.formType);
     console.log("params のキー:", Object.keys(params));
     
+    // デバッグ：params全体をログ出力（reservationフォームの場合）
+    if (params.formType === 'reservation') {
+      console.log("=== 受信したparams全体 ===");
+      console.log(JSON.stringify(params, null, 2));
+    }
+    
     // スプレッドシートを開く
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     
@@ -91,6 +107,116 @@ function doPost(e) {
         throw new Error("シート '利用予約窓口' が見つかりません");
       }
       
+      // 候補日時の処理
+      var selectedDateTimesText = '';
+      
+      // デバッグログ：受信したデータを詳細に確認
+      console.log("=== 候補日時データの受信確認 ===");
+      console.log("params.selectedDateTimesText:", params.selectedDateTimesText);
+      console.log("params.selectedDateTimesText の型:", typeof params.selectedDateTimesText);
+      console.log("params.selectedDateTimes:", params.selectedDateTimes);
+      console.log("params.selectedDateTimes の型:", typeof params.selectedDateTimes);
+      console.log("params.selectedDateTimes が配列か:", Array.isArray(params.selectedDateTimes));
+      console.log("params の全キー:", Object.keys(params));
+      
+      // params.selectedDateTimesが文字列の場合（JSON文字列の可能性）
+      // 複数回パースが必要な場合がある（文字列化されたJSON文字列など）
+      var parseAttempts = 0;
+      var maxParseAttempts = 3;
+      var currentValue = params.selectedDateTimes;
+      
+      while (typeof currentValue === 'string' && parseAttempts < maxParseAttempts) {
+        try {
+          var parsed = JSON.parse(currentValue);
+          if (Array.isArray(parsed)) {
+            params.selectedDateTimes = parsed;
+            console.log("✓ selectedDateTimes を" + (parseAttempts + 1) + "回目のパースで配列として取得しました");
+            break;
+          } else if (typeof parsed === 'string') {
+            // まだ文字列の場合は再パースを試行
+            currentValue = parsed;
+            parseAttempts++;
+            console.log("再パースが必要です（" + parseAttempts + "回目）");
+          } else {
+            console.log("パース結果が配列でも文字列でもありません:", typeof parsed);
+            break;
+          }
+        } catch (e) {
+          console.log("パースに失敗（" + (parseAttempts + 1) + "回目）:", e.message);
+          // パースできない場合は文字列のまま処理を試みる
+          break;
+        }
+      }
+      
+      // 最終的に文字列のままの場合、手動で配列に変換を試みる
+      if (typeof params.selectedDateTimes === 'string' && params.selectedDateTimes.trim() !== '') {
+        console.log("selectedDateTimes が文字列のままです。手動パースを試行します");
+        console.log("文字列の内容:", params.selectedDateTimes.substring(0, 200)); // 最初の200文字を表示
+      }
+      
+      // 候補日時の取得を試行（複数の方法で）
+      if (params.selectedDateTimesText && params.selectedDateTimesText.trim() !== '') {
+        // 方法1: テキスト形式の候補日時がある場合（最優先）
+        selectedDateTimesText = params.selectedDateTimesText;
+        console.log("✓ 方法1: selectedDateTimesText から取得:", selectedDateTimesText);
+      } else if (params.selectedDateTimes) {
+        // 方法2: 配列形式の候補日時がある場合
+        if (Array.isArray(params.selectedDateTimes)) {
+          console.log("配列の要素数:", params.selectedDateTimes.length);
+          if (params.selectedDateTimes.length > 0) {
+            console.log("配列の最初の要素:", JSON.stringify(params.selectedDateTimes[0]));
+          }
+          
+          selectedDateTimesText = params.selectedDateTimes.map(function(dt, index) {
+            console.log("要素" + index + ":", JSON.stringify(dt));
+            
+            // displayTextを最優先
+            if (dt && dt.displayText) {
+              console.log("  → displayTextを使用:", dt.displayText);
+              return dt.displayText;
+            } 
+            // dateLabelとtimeLabelから作成
+            else if (dt && dt.dateLabel && dt.timeLabel) {
+              var result = dt.dateLabel + ' ' + dt.timeLabel;
+              console.log("  → dateLabel + timeLabelから作成:", result);
+              return result;
+            } 
+            // dateとtimeから作成
+            else if (dt && dt.date && dt.time) {
+              try {
+                var dateObj = new Date(dt.date);
+                if (!isNaN(dateObj.getTime())) {
+                  var weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+                  var dateLabel = (dateObj.getMonth() + 1) + '月' + dateObj.getDate() + '日（' + weekdays[dateObj.getDay()] + '）';
+                  var timeLabel = dt.time + '-' + (dt.end || dt.time);
+                  var result = dateLabel + ' ' + timeLabel;
+                  console.log("  → date + timeから作成:", result);
+                  return result;
+                }
+              } catch (e) {
+                console.log("  → 日付パースエラー:", e.message);
+              }
+            }
+            console.log("  → データが不完全です");
+            return '';
+          }).filter(function(text) {
+            return text && text.trim() !== '';
+          }).join('、');
+          
+          console.log("✓ 方法2: selectedDateTimes 配列から取得:", selectedDateTimesText);
+        } else {
+          console.log("⚠ selectedDateTimes が配列ではありません。型:", typeof params.selectedDateTimes);
+          console.log("値:", params.selectedDateTimes);
+        }
+      } else {
+        console.log("⚠ 候補日時データが見つかりません");
+        console.log("params.selectedDateTimesText の存在:", !!params.selectedDateTimesText);
+        console.log("params.selectedDateTimes の存在:", !!params.selectedDateTimes);
+      }
+      
+      console.log("最終的な候補日時データ:", selectedDateTimesText);
+      console.log("最終的な候補日時データの長さ:", selectedDateTimesText ? selectedDateTimesText.length : 0);
+
       // 保存
       sheet.appendRow([
         dateStr,
@@ -101,19 +227,68 @@ function doPost(e) {
         params.tel || '',
         params.certificate || '',
         params.requestType || '',
+        selectedDateTimesText || '',  // 候補日時を追加
         params.message || ''
       ]);
 
       console.log("利用予約フォーム: スプレッドシートに保存完了");
 
       // メール通知
+      var emailBody = "利用予約フォームから申し込みがありました。\n\n" +
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+        "【基本情報】\n" +
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+        "■氏名: " + (params.parentName || '') + "\n" +
+        "■お子さまのお名前: " + (params.childName || '') + "\n" +
+        "■お子さまの年齢: " + (params.childAge || '') + "\n" +
+        "■連絡先: " + (params.email || '') + " / " + (params.tel || '') + "\n" +
+        "■受給者証の有無: " + (params.certificate || '') + "\n" +
+        "■お問い合わせ内容: " + (params.requestType || '') + "\n\n";
+      
+      // 見学・面談希望の場合は候補日時を強調表示
+      var isVisitOrConsultation = params.requestType && 
+        (params.requestType.includes('見学希望') || params.requestType.includes('面談希望'));
+      
+      if (isVisitOrConsultation) {
+        emailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+          "【希望候補日時】\n" +
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+        
+        if (selectedDateTimesText && selectedDateTimesText.trim() !== '') {
+          // 候補日時を番号付きで表示
+          var dateTimesArray = selectedDateTimesText.split('、');
+          dateTimesArray.forEach(function(dt, index) {
+            emailBody += "候補" + (index + 1) + ": " + dt + "\n";
+          });
+        } else {
+          emailBody += "⚠️ 候補日時が選択されていません\n";
+        }
+        emailBody += "\n";
+      } else if (selectedDateTimesText && selectedDateTimesText.trim() !== '') {
+        // 見学・面談希望以外でも候補日時がある場合は表示
+        emailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+          "【希望候補日時】\n" +
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+        var dateTimesArray = selectedDateTimesText.split('、');
+        dateTimesArray.forEach(function(dt, index) {
+          emailBody += "候補" + (index + 1) + ": " + dt + "\n";
+        });
+        emailBody += "\n";
+      }
+      
+      // メッセージがある場合のみ表示
+      if (params.message && params.message.trim() !== '') {
+        emailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+          "【その他ご質問など】\n" +
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+          (params.message || '') + "\n\n";
+      }
+      
+      emailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+      
       sendNotification(
         '【相談・見学】予約が入りました',
-        "利用予約フォームから申し込みがありました。\n\n" +
-        "■氏名: " + (params.parentName || '') + "\n" +
-        "■連絡先: " + (params.email || '') + " / " + (params.tel || '') + "\n" +
-        "■内容: " + (params.requestType || '') + "\n\n" +
-        "■メッセージ:\n" + (params.message || '')
+        emailBody
       );
       
       console.log("利用予約フォーム: 処理完了");
