@@ -46,6 +46,11 @@
 
         <!-- 体験会一覧 -->
         <div id="eventsList" class="space-y-4 mb-8">
+            <!-- 読み込み中表示 -->
+            <div id="loadingIndicator" class="text-center py-12">
+                <i class="fas fa-spinner fa-spin text-4xl text-brand-cta mb-4"></i>
+                <p class="text-gray-600 font-bold">読み込み中...</p>
+            </div>
             <!-- イベントカードはJavaScriptで動的に生成 -->
         </div>
 
@@ -188,6 +193,12 @@
 
         // イベントデータを取得
         function loadEvents() {
+            // 読み込み中表示を表示
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'block';
+            }
+            
             fetch(SCRIPT_URL + '?action=getEvents&isArchived=false')
                 .then(response => response.json())
                 .then(data => {
@@ -232,6 +243,13 @@
         // イベントカードを生成
         function renderEvents() {
             const eventsList = document.getElementById('eventsList');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            // 読み込み中表示を非表示にする
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+            }
+            
             eventsList.innerHTML = '';
 
             if (eventsData.length === 0) {
@@ -321,12 +339,13 @@
                                 const previewLines = lines.slice(0, 3);
                                 const previewText = previewLines.join('\n');
                                 const hasMore = lines.length > 3 || desc.length > 150;
-                                const escapedDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
-                                const escapedPreview = previewText.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
+                                // HTMLエスケープ（改行は<br>に変換）
+                                const escapedDesc = desc.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
+                                const escapedPreview = previewText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
                                 
                                 if (hasMore) {
                                     return `
-                                        <p class="text-sm text-gray-600 leading-relaxed description-text whitespace-pre-line" data-full-text="${escapedDesc}">
+                                        <p class="text-sm text-gray-600 leading-relaxed description-text" data-full-text="${escapedDesc}">
                                             ${escapedPreview}...
                                         </p>
                                         <button class="text-xs text-brand-cta hover:text-orange-600 font-bold mt-1 description-toggle-btn" data-event-id="${event.id}">
@@ -334,7 +353,7 @@
                                         </button>
                                     `;
                                 } else {
-                                    return `<p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">${escapedDesc}</p>`;
+                                    return `<p class="text-sm text-gray-600 leading-relaxed">${escapedDesc}</p>`;
                                 }
                             })()}
                         </div>
@@ -391,17 +410,15 @@
                     const fullText = descriptionText.dataset.fullText;
                     
                     if (this.textContent.trim() === '続きを読む') {
-                        // 全文を表示（HTMLエスケープを解除）
-                        const decodedFullText = fullText.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-                        descriptionText.textContent = decodedFullText;
+                        // 全文を表示（HTMLエスケープを解除して<br>タグを改行として表示）
+                        descriptionText.innerHTML = fullText;
                         this.textContent = '閉じる';
                     } else {
                         // 冒頭3行だけ表示
-                        const decodedFullText = fullText.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-                        const lines = decodedFullText.split('\n');
+                        const lines = fullText.split('<br>');
                         const previewLines = lines.slice(0, 3);
-                        const previewText = previewLines.join('\n');
-                        descriptionText.textContent = previewText + '...';
+                        const previewText = previewLines.join('<br>');
+                        descriptionText.innerHTML = previewText + '...';
                         this.textContent = '続きを読む';
                     }
                 });
