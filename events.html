@@ -181,7 +181,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw15RQhz7quX6KzxHmkngsvx5w69VWPgiFD07Z9wQ34bzIS0Mq-xl5zh1eSsY7g9R9N/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxVT5qV4GA3OHhamceSF5SSu84vJTUNFChZ_X9XELGUfwWiEoHJYMIW7MlxBop8Cdx/exec";
 
         let eventsData = [];
         let selectedEvent = null;
@@ -253,9 +253,11 @@
                     hasImageUrl: !!event.imageUrl
                 });
                 
-                const availableSlots = event.capacity - (event.currentParticipants || 0);
-                const isFull = availableSlots <= 0;
-                const isAlmostFull = availableSlots <= 2;
+                // 状態フラグ: currentParticipantsの値で判定
+                // -1 = 残りわずか、-2 = 満員、0以上 = 通常（受付中）
+                const currentParticipants = event.currentParticipants || 0;
+                const isFull = currentParticipants === -2;
+                const isAlmostFull = currentParticipants === -1;
 
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition';
@@ -319,12 +321,12 @@
                                 const previewLines = lines.slice(0, 3);
                                 const previewText = previewLines.join('\n');
                                 const hasMore = lines.length > 3 || desc.length > 150;
-                                const escapedDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-                                const escapedPreview = previewText.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                                const escapedDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
+                                const escapedPreview = previewText.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
                                 
                                 if (hasMore) {
                                     return `
-                                        <p class="text-sm text-gray-600 leading-relaxed description-text" data-full-text="${escapedDesc}">
+                                        <p class="text-sm text-gray-600 leading-relaxed description-text whitespace-pre-line" data-full-text="${escapedDesc}">
                                             ${escapedPreview}...
                                         </p>
                                         <button class="text-xs text-brand-cta hover:text-orange-600 font-bold mt-1 description-toggle-btn" data-event-id="${event.id}">
@@ -332,7 +334,7 @@
                                         </button>
                                     `;
                                 } else {
-                                    return `<p class="text-sm text-gray-600 leading-relaxed">${escapedDesc}</p>`;
+                                    return `<p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">${escapedDesc}</p>`;
                                 }
                             })()}
                         </div>
@@ -357,7 +359,7 @@
                             ` : ''}
                             <div class="flex items-center text-sm text-gray-700">
                                 <i class="fas fa-users text-brand-cta mr-2 w-5"></i>
-                                <span>定員: ${event.capacity}名 / 残り${availableSlots}名</span>
+                                <span>定員: ${event.capacity}名</span>
                             </div>
                         </div>
                         <button 

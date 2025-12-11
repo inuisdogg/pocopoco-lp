@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>イベント管理画面 | 児童発達支援 pocopoco</title>
+    <title>体験会管理画面 | 児童発達支援 pocopoco</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +46,7 @@
     <main class="pt-20 pb-12 px-4 max-w-md mx-auto">
         <!-- ログイン画面 -->
         <div id="loginScreen" class="bg-white p-8 rounded-xl shadow-md">
-            <h1 class="text-2xl font-bold text-brand-main mb-6 text-center">イベント管理画面</h1>
+            <h1 class="text-2xl font-bold text-brand-main mb-6 text-center">体験会管理画面</h1>
             <form id="loginForm" class="space-y-4">
                 <div>
                     <label for="password" class="block text-sm font-bold text-gray-700 mb-1">パスワード</label>
@@ -62,7 +62,7 @@
         <div id="adminScreen" class="hidden">
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-bold text-brand-main mb-2">
-                    <i class="fas fa-cog text-brand-accent mr-2"></i>イベント管理
+                    <i class="fas fa-cog text-brand-accent mr-2"></i>体験会管理
                 </h1>
             </div>
 
@@ -72,13 +72,13 @@
                     開催予定
                 </button>
                 <button id="archiveTab" class="flex-1 py-2 px-4 rounded-md bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition">
-                    過去のイベント
+                    過去の体験会
                 </button>
             </div>
 
-            <!-- 新規イベント追加ボタン -->
+            <!-- 新規体験会追加ボタン -->
             <button id="addEventBtn" class="w-full bg-brand-cta text-white font-bold py-3 rounded-full shadow-md hover:bg-orange-600 transition mb-6">
-                <i class="fas fa-plus mr-2"></i>新規イベントを追加
+                <i class="fas fa-plus mr-2"></i>新規体験会を追加
             </button>
 
             <!-- イベント一覧 -->
@@ -92,11 +92,11 @@
             </div>
         </div>
 
-        <!-- イベント編集モーダル -->
+        <!-- 体験会編集モーダル -->
         <div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
                 <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                    <h2 id="modalTitle" class="text-xl font-bold text-brand-main">新規イベント追加</h2>
+                    <h2 id="modalTitle" class="text-xl font-bold text-brand-main">新規体験会追加</h2>
                     <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -161,12 +161,6 @@
                         <p class="text-xs text-gray-500 mt-1">※日時をクリックするとカレンダーと時刻選択が表示されます</p>
                     </div>
 
-                    <!-- 掲載期限 -->
-                    <div>
-                        <label for="eventDisplayDeadline" class="block text-sm font-bold text-gray-700 mb-1">掲載期限 <span class="text-red-500 text-xs">*必須</span></label>
-                        <input type="text" id="eventDisplayDeadline" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3" placeholder="日時を選択" readonly>
-                        <p class="text-xs text-gray-500 mt-1">※この日時まで体験会一覧に表示されます。日時をクリックするとカレンダーと時刻選択が表示されます。</p>
-                    </div>
 
                     <!-- 定員 -->
                     <div>
@@ -227,7 +221,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw15RQhz7quX6KzxHmkngsvx5w69VWPgiFD07Z9wQ34bzIS0Mq-xl5zh1eSsY7g9R9N/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxVT5qV4GA3OHhamceSF5SSu84vJTUNFChZ_X9XELGUfwWiEoHJYMIW7MlxBop8Cdx/exec";
         
         // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
         const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
@@ -330,7 +324,7 @@
             container.innerHTML = '';
 
             if (events.length === 0) {
-                container.innerHTML = '<div class="text-center text-gray-500 py-8">イベントがありません</div>';
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">体験会がありません</div>';
                 return;
             }
 
@@ -348,8 +342,11 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-200';
                 
-                const availableSlots = event.capacity - (event.currentParticipants || 0);
-                const isFull = availableSlots <= 0;
+                // 状態フラグ: currentParticipantsの値で判定
+                // -1 = 残りわずか、-2 = 満員、0以上 = 通常（受付中）
+                const currentParticipants = event.currentParticipants || 0;
+                const isFull = currentParticipants === -2;
+                const isAlmostFull = currentParticipants === -1;
                 
                 // Base64データをデータURIとして表示（Google Drive不要）
                 let displayImageUrl = null;
@@ -398,6 +395,7 @@
                                 <div class="flex items-center gap-2 mb-2 flex-wrap">
                                     <span class="bg-brand-accent text-white text-xs px-2 py-1 rounded-full font-bold">${event.category}</span>
                                     ${isFull ? '<span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-bold">満員</span>' : ''}
+                                    ${isAlmostFull && !isFull ? '<span class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full font-bold">残りわずか</span>' : ''}
                                     ${isArchived ? '<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-bold">終了</span>' : ''}
                                 </div>
                                 <h3 class="text-lg font-bold text-brand-main mb-2">${event.title}</h3>
@@ -428,16 +426,32 @@
                                 <span>定員: ${event.capacity}名 / 参加: ${(event.currentParticipants !== null && event.currentParticipants !== undefined) ? event.currentParticipants : 0}名</span>
                             </div>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-col gap-2">
                             ${!isArchived ? `
-                            <button class="flex-1 bg-brand-main text-white font-bold py-2 rounded-lg hover:bg-brown-700 transition edit-event-btn" data-event-id="${event.id}">
-                                <i class="fas fa-edit mr-1"></i>編集
-                            </button>
-                            <button class="flex-1 bg-brand-cta text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition archive-event-btn" data-event-id="${event.id}">
-                                <i class="fas fa-archive mr-1"></i>アーカイブ
-                            </button>
+                            <div class="flex gap-2">
+                                <button class="flex-1 bg-brand-main text-white font-bold py-2 rounded-lg hover:bg-brown-700 transition edit-event-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-edit mr-1"></i>編集
+                                </button>
+                                <button class="flex-1 bg-brand-cta text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition archive-event-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-archive mr-1"></i>アーカイブ
+                                </button>
+                            </div>
+                            <div class="flex gap-2">
+                                ${!isFull ? `
+                                <button class="flex-1 bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition set-almost-full-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>残りわずか
+                                </button>
+                                <button class="flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition set-full-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-ban mr-1"></i>満員にする
+                                </button>
+                                ` : `
+                                <button class="flex-1 bg-green-500 text-white font-bold py-2 rounded-lg hover:bg-green-600 transition reopen-registration-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-unlock mr-1"></i>受付再開
+                                </button>
+                                `}
+                            </div>
                             ` : ''}
-                            <button class="flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition delete-event-btn" data-event-id="${event.id}">
+                            <button class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition delete-event-btn" data-event-id="${event.id}">
                                 <i class="fas fa-trash mr-1"></i>削除
                             </button>
                         </div>
@@ -458,6 +472,90 @@
 
             document.querySelectorAll('.delete-event-btn').forEach(btn => {
                 btn.addEventListener('click', () => deleteEvent(parseInt(btn.dataset.eventId)));
+            });
+            
+            // 「残りわずか」ボタンのイベントリスナー
+            document.querySelectorAll('.set-almost-full-btn').forEach(btn => {
+                btn.addEventListener('click', () => setAlmostFull(parseInt(btn.dataset.eventId)));
+            });
+            
+            // 「満員にする」ボタンのイベントリスナー
+            document.querySelectorAll('.set-full-btn').forEach(btn => {
+                btn.addEventListener('click', () => setFull(parseInt(btn.dataset.eventId)));
+            });
+            
+            // 「受付再開」ボタンのイベントリスナー
+            document.querySelectorAll('.reopen-registration-btn').forEach(btn => {
+                btn.addEventListener('click', () => reopenRegistration(parseInt(btn.dataset.eventId)));
+            });
+        }
+        
+        // 残りわずかに設定
+        function setAlmostFull(eventId) {
+            if (!confirm('この体験会を「残りわずか」に設定しますか？')) return;
+            
+            console.log('🔄 残りわずか設定開始: eventId =', eventId);
+            
+            // CORSエラーを回避するため、URLパラメータとして送信
+            const url = SCRIPT_URL + '?action=setAlmostFull&eventId=' + eventId;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(function() {
+                // no-corsモードではレスポンスを読めないため、成功とみなす
+                alert('「残りわずか」に設定しました。');
+                loadEvents();
+            })
+            .catch(function(error) {
+                console.error('❌ 残りわずか設定エラー:', error);
+                alert('設定に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）を確認してください。');
+            });
+        }
+        
+        // 満員に設定
+        function setFull(eventId) {
+            if (!confirm('この体験会を「満員」に設定しますか？\n（申し込み受付を終了します）')) return;
+            
+            console.log('🔄 満員設定開始: eventId =', eventId);
+            
+            // CORSエラーを回避するため、URLパラメータとして送信
+            const url = SCRIPT_URL + '?action=setFull&eventId=' + eventId;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                // no-corsモードではレスポンスを読めないため、成功とみなす
+                alert('「満員」に設定しました。申し込み受付を終了しました。');
+                loadEvents();
+            })
+            .catch(error => {
+                console.error('❌ 満員設定エラー:', error);
+                alert('設定に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）を確認してください。');
+            });
+        }
+        
+        // 受付再開
+        function reopenRegistration(eventId) {
+            if (!confirm('この体験会の申し込み受付を再開しますか？')) return;
+            
+            console.log('🔄 受付再開開始: eventId =', eventId);
+            
+            // CORSエラーを回避するため、URLパラメータとして送信
+            const url = SCRIPT_URL + '?action=reopenRegistration&eventId=' + eventId;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                // no-corsモードではレスポンスを読めないため、成功とみなす
+                alert('申し込み受付を再開しました。');
+                loadEvents();
+            })
+            .catch(error => {
+                console.error('❌ 受付再開エラー:', error);
+                alert('設定に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）を確認してください。');
             });
         }
 
@@ -483,10 +581,10 @@
             return timeString;
         }
 
-        // 新規イベント追加
+        // 新規体験会追加
         document.getElementById('addEventBtn')?.addEventListener('click', function() {
             currentEditingEventId = null;
-            document.getElementById('modalTitle').textContent = '新規イベント追加';
+            document.getElementById('modalTitle').textContent = '新規体験会追加';
             // 新規追加時はボタンのテキストを「保存」に戻す
             const submitBtn = document.getElementById('submitBtn');
             if (submitBtn) {
@@ -508,7 +606,7 @@
             document.body.style.overflow = 'hidden';
         });
 
-        // イベント編集
+        // 体験会編集
         function editEvent(eventId) {
             fetch(SCRIPT_URL + '?action=getEvent&eventId=' + eventId)
                 .then(response => response.json())
@@ -516,7 +614,7 @@
                     if (data.status === 'success' && data.event) {
                         const event = data.event;
                         currentEditingEventId = eventId;
-                        document.getElementById('modalTitle').textContent = 'イベント編集';
+                        document.getElementById('modalTitle').textContent = '体験会編集';
                         // 編集時はボタンのテキストを「更新する」に変更
                         const submitBtn = document.getElementById('submitBtn');
                         if (submitBtn) {
@@ -561,27 +659,6 @@
                             document.getElementById('eventEndTime').value = endTime ? endTime.trim() : '';
                         }
                         
-                        // 掲載期限のフォーマット処理（日時形式に対応）
-                        let formattedDeadline = event.displayDeadline || '';
-                        if (formattedDeadline && formattedDeadline.includes('/')) {
-                            formattedDeadline = formattedDeadline.replace(/\//g, '-');
-                        }
-                        // 日付のみの場合は、時刻を23:59に設定
-                        if (formattedDeadline && !formattedDeadline.includes(' ')) {
-                            formattedDeadline = formattedDeadline + ' 23:59';
-                        }
-                        // 掲載期限を設定（ピッカーが初期化されている場合）
-                        if (deadlinePicker && formattedDeadline) {
-                            try {
-                                deadlinePicker.setDate(formattedDeadline, false);
-                            } catch (e) {
-                                console.log('掲載期限の設定エラー:', e);
-                                document.getElementById('eventDisplayDeadline').value = formattedDeadline;
-                            }
-                        } else {
-                            document.getElementById('eventDisplayDeadline').value = formattedDeadline;
-                        }
-                        
                         document.getElementById('eventCapacity').value = event.capacity || '';
                         document.getElementById('eventCurrentParticipants').value = event.currentParticipants || 0;
                         document.getElementById('eventVenue').value = event.venue || 'pocopoco 東京都府中新町1丁目71-7';
@@ -623,9 +700,9 @@
                 });
         }
 
-        // イベントをアーカイブ
+        // 体験会をアーカイブ
         function archiveEvent(eventId) {
-            if (!confirm('このイベントをアーカイブしますか？')) return;
+            if (!confirm('この体験会をアーカイブしますか？')) return;
             
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -637,7 +714,7 @@
                 })
             })
             .then(() => {
-                alert('イベントをアーカイブしました。');
+                alert('体験会をアーカイブしました。');
                 loadEvents();
             })
             .catch(error => {
@@ -646,9 +723,9 @@
             });
         }
 
-        // イベントを削除
+        // 体験会を削除
         function deleteEvent(eventId) {
-            if (!confirm('このイベントを削除しますか？この操作は取り消せません。')) return;
+            if (!confirm('この体験会を削除しますか？この操作は取り消せません。')) return;
             
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -660,7 +737,7 @@
                 })
             })
             .then(() => {
-                alert('イベントを削除しました。');
+                alert('体験会を削除しました。');
                 loadEvents();
             })
             .catch(error => {
@@ -693,9 +770,9 @@
 
         // 画像プレビューとフォーム送信処理はトリミングモーダルのスクリプト（下記）で処理
 
-        // イベントを保存
+        // 体験会を保存
         function saveEvent(eventData, submitBtn, originalBtnText) {
-            console.log('=== イベント保存開始 ===');
+            console.log('=== 体験会保存開始 ===');
             console.log('保存するデータ:', JSON.stringify(eventData, null, 2));
             console.log('SCRIPT_URL:', SCRIPT_URL);
             
@@ -784,7 +861,7 @@
                         console.warn('⚠️ GASの実行ログを確認して、画像アップロードが成功したか確認してください');
                     }
                     
-                    alert('イベントを保存しました。' + (eventData.imageBase64 ? '\n\n画像も一緒にアップロードしました。' : ''));
+                    alert('体験会を保存しました。' + (eventData.imageBase64 ? '\n\n画像も一緒にアップロードしました。' : ''));
                     closeModal();
                     loadEvents();
                     submitBtn.disabled = false;
@@ -839,7 +916,7 @@
                         setTimeout(() => {
                             console.log('🔄 イベント一覧を再読み込み');
                             loadEvents();
-                            alert('イベントを保存しました。' + (eventData.imageBase64 ? '\n\n画像も一緒にアップロードしました。' : '') + '\n\n⚠️ 実際に保存されたか確認してください：\n1. Google Apps Scriptの実行ログで「📝 9列目（画像URL）」を確認\n2. スプレッドシートの「イベント一覧」タブの9列目\n3. Google Driveの指定フォルダ\n\nもし保存されていない場合は、GASのデプロイ設定を確認してください。');
+                            alert('体験会を保存しました。' + (eventData.imageBase64 ? '\n\n画像も一緒にアップロードしました。' : '') + '\n\n⚠️ 実際に保存されたか確認してください：\n1. Google Apps Scriptの実行ログで「📝 9列目（画像URL）」を確認\n2. スプレッドシートの「イベント一覧」タブの9列目\n3. Google Driveの指定フォルダ\n\nもし保存されていない場合は、GASのデプロイ設定を確認してください。');
                             closeModal();
                             submitBtn.disabled = false;
                             submitBtn.innerHTML = originalBtnText;
@@ -955,48 +1032,6 @@
                 console.log('✅ Flatpickr終了日時を初期化しました');
             }
             
-            // 掲載期限の日時ピッカーを初期化（開催日時以降を選べないようにする）
-            const eventDisplayDeadlineInput = document.getElementById('eventDisplayDeadline');
-            if (eventDisplayDeadlineInput) {
-                deadlinePicker = flatpickr(eventDisplayDeadlineInput, {
-                    enableTime: true,
-                    dateFormat: "Y-m-d H:i",
-                    time_24hr: true,
-                    locale: flatpickr.l10ns.ja,
-                    allowInput: false,
-                    clickOpens: true,
-                    minuteIncrement: 15, // 15分刻み
-                    minDate: "today", // 今日以降のみ選択可能
-                    onChange: function(selectedDates, dateStr, instance) {
-                        // 開始日時が設定されている場合、その日時以前のみ選択可能にする
-                        const startDateTimeInput = document.getElementById('eventStartDateTime');
-                        if (startDateTimeInput && startDateTimeInput.value) {
-                            const startDate = new Date(startDateTimeInput.value);
-                            if (!isNaN(startDate.getTime())) {
-                                deadlinePicker.set('maxDate', startDate);
-                            }
-                        }
-                    }
-                });
-                console.log('✅ Flatpickr掲載期限日時ピッカーを初期化しました');
-            }
-            
-            // 開始日時の変更を監視して、掲載期限の最大値を更新
-            const startDateTimeInputForDeadline = document.getElementById('eventStartDateTime');
-            if (startDateTimeInputForDeadline && deadlinePicker) {
-                startDateTimeInputForDeadline.addEventListener('change', function() {
-                    const startDateTimeStr = this.value;
-                    if (startDateTimeStr) {
-                        const startParts = startDateTimeStr.split(' ');
-                        if (startParts.length === 2) {
-                            const eventDate = new Date(startParts[0]);
-                            if (!isNaN(eventDate.getTime())) {
-                                deadlinePicker.set('maxDate', eventDate);
-                            }
-                        }
-                    }
-                });
-            }
             console.log('✅ DOMContentLoaded: トリミング機能の初期化開始');
             
             let cropper = null;
@@ -1318,7 +1353,6 @@
                 startTime: startTime,
                 endTime: endTime,
                 time: startTime + '-' + endTime,
-                displayDeadline: document.getElementById('eventDisplayDeadline').value,
                 capacity: parseInt(document.getElementById('eventCapacity').value),
                 currentParticipants: parseInt(document.getElementById('eventCurrentParticipants').value) || 0,
                 venue: document.getElementById('eventVenue').value,

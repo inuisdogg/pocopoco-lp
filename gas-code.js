@@ -87,11 +87,57 @@ function doGet(e) {
       }
     }
     
+    // 状態設定アクション（GETリクエストで処理）
+    if (action === 'setAlmostFull' || action === 'setFull' || action === 'reopenRegistration') {
+      var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+      var sheet = ss.getSheetByName(EVENT_SHEET_NAME);
+      
+      if (!sheet) {
+        return output.setContent(JSON.stringify({ status: 'error', message: 'シートが見つかりません' }));
+      }
+      
+      var eventId = parseInt(e.parameter.eventId);
+      var lastRow = sheet.getLastRow();
+      var found = false;
+      
+      for (var i = 2; i <= lastRow; i++) {
+        if (sheet.getRange(i, 1).getValue() === eventId) {
+          if (action === 'setAlmostFull') {
+            sheet.getRange(i, 8).setValue(-1); // currentParticipantsを-1に設定
+          } else if (action === 'setFull') {
+            sheet.getRange(i, 8).setValue(-2); // currentParticipantsを-2に設定
+          } else if (action === 'reopenRegistration') {
+            sheet.getRange(i, 8).setValue(0); // currentParticipantsを0に設定
+          }
+          var dateStr = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy/MM/dd HH:mm');
+          sheet.getRange(i, 12).setValue(dateStr); // 更新日時
+          found = true;
+          break;
+        }
+      }
+      
+      if (!found) {
+        return output.setContent(JSON.stringify({ status: 'error', message: 'イベントIDが見つかりません: ' + eventId }));
+      }
+      
+      return output.setContent(JSON.stringify({ status: 'success', message: '状態を更新しました' }));
+    }
+    
     return output.setContent(JSON.stringify({ status: 'error', message: '無効なアクション' }));
   } catch (error) {
     console.error('doGetエラー:', error);
     return output.setContent(JSON.stringify({ status: 'error', message: error.toString() }));
   }
+}
+
+// ===========================================================
+// OPTIONSリクエスト処理（CORSプリフライト用）
+// ===========================================================
+
+function doOptions(e) {
+  // CORSプリフライトリクエスト用のレスポンス
+  // GASのWebアプリは自動的にCORSヘッダーを設定するため、空のレスポンスを返すだけでOK
+  return ContentService.createTextOutput('').setMimeType(ContentService.MimeType.TEXT);
 }
 
 // ===========================================================
@@ -827,8 +873,8 @@ function doPost(e) {
       console.log("イベント申し込みフォーム: 処理完了");
     }
 
-    // ■パターンE：イベント管理（作成・更新・削除・アーカイブ）
-    else if (params.action === 'createEvent' || params.action === 'updateEvent' || params.action === 'deleteEvent' || params.action === 'archiveEvent') {
+    // ■パターンE：イベント管理（作成・更新・削除・アーカイブ・状態設定）
+    else if (params.action === 'createEvent' || params.action === 'updateEvent' || params.action === 'deleteEvent' || params.action === 'archiveEvent' || params.action === 'setAlmostFull' || params.action === 'setFull' || params.action === 'reopenRegistration') {
       console.log("=== ✅ イベント管理処理を開始 ===");
       console.log("action: " + params.action);
       console.log("params のキー: " + Object.keys(params));
@@ -1152,6 +1198,72 @@ function doPost(e) {
         console.log("イベントアーカイブ完了: ID=" + eventId);
       }
       
+      // 残りわずかに設定（currentParticipantsを-1に設定）
+      else if (params.action === 'setAlmostFull') {
+        var eventId = parseInt(params.eventId);
+        var lastRow = sheet.getLastRow();
+        var found = false;
+        
+        for (var i = 2; i <= lastRow; i++) {
+          if (sheet.getRange(i, 1).getValue() === eventId) {
+            sheet.getRange(i, 8).setValue(-1); // currentParticipantsを-1に設定
+            sheet.getRange(i, 12).setValue(dateStr); // 更新日時
+            found = true;
+            break;
+          }
+        }
+        
+        if (!found) {
+          throw new Error('イベントIDが見つかりません: ' + eventId);
+        }
+        
+        console.log("残りわずか設定完了: ID=" + eventId);
+      }
+      
+      // 満員に設定（currentParticipantsを-2に設定）
+      else if (params.action === 'setFull') {
+        var eventId = parseInt(params.eventId);
+        var lastRow = sheet.getLastRow();
+        var found = false;
+        
+        for (var i = 2; i <= lastRow; i++) {
+          if (sheet.getRange(i, 1).getValue() === eventId) {
+            sheet.getRange(i, 8).setValue(-2); // currentParticipantsを-2に設定
+            sheet.getRange(i, 12).setValue(dateStr); // 更新日時
+            found = true;
+            break;
+          }
+        }
+        
+        if (!found) {
+          throw new Error('イベントIDが見つかりません: ' + eventId);
+        }
+        
+        console.log("満員設定完了: ID=" + eventId);
+      }
+      
+      // 受付再開（currentParticipantsを0に設定）
+      else if (params.action === 'reopenRegistration') {
+        var eventId = parseInt(params.eventId);
+        var lastRow = sheet.getLastRow();
+        var found = false;
+        
+        for (var i = 2; i <= lastRow; i++) {
+          if (sheet.getRange(i, 1).getValue() === eventId) {
+            sheet.getRange(i, 8).setValue(0); // currentParticipantsを0に設定
+            sheet.getRange(i, 12).setValue(dateStr); // 更新日時
+            found = true;
+            break;
+          }
+        }
+        
+        if (!found) {
+          throw new Error('イベントIDが見つかりません: ' + eventId);
+        }
+        
+        console.log("受付再開完了: ID=" + eventId);
+      }
+      
       console.log("=== ✅ イベント管理処理完了 ===");
       return output.setContent(JSON.stringify({ 
         status: "success", 
@@ -1375,6 +1487,10 @@ function getEvents(isArchived) {
       return [];
     }
     
+    // 現在の日時を取得
+    var now = new Date();
+    var nowStr = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm');
+    
     // ヘッダー行を読み取って列のインデックスを決定
     var headerRow = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     var columnIndexes = {
@@ -1451,6 +1567,36 @@ function getEvents(isArchived) {
       seenIds[eventId] = true;
       
       var archived = row[columnIndexes.archived] === true || row[columnIndexes.archived] === 'true' || row[columnIndexes.archived] === 'TRUE';
+      
+      // イベントの日時が過ぎていたら自動的にアーカイブ
+      if (!archived && !isArchived) {
+        var eventDate = row[columnIndexes.date];
+        var eventTime = row[columnIndexes.time];
+        
+        if (eventDate && eventTime) {
+          try {
+            // 日付と時間を結合してDateオブジェクトを作成
+            var dateStr = eventDate.toString();
+            var timeStr = eventTime.toString();
+            var timeParts = timeStr.split('-');
+            
+            if (timeParts.length >= 1) {
+              var startTime = timeParts[0].trim();
+              var eventDateTimeStr = dateStr + ' ' + startTime;
+              var eventDateTime = new Date(eventDateTimeStr);
+              
+              // イベントの開始日時が現在より過去なら自動的にアーカイブ
+              if (!isNaN(eventDateTime.getTime()) && eventDateTime < now) {
+                console.log("⏰ イベントの日時が過ぎたため自動アーカイブ: ID=" + eventId + ", 日時=" + eventDateTimeStr);
+                sheet.getRange(i, columnIndexes.archived + 1).setValue('true');
+                archived = true;
+              }
+            }
+          } catch (dateError) {
+            console.error("日時の解析エラー: ID=" + eventId + ", エラー=" + dateError.toString());
+          }
+        }
+      }
       
       if (archived === isArchived) {
         // Base64データをそのまま取得（Google Drive不要）
