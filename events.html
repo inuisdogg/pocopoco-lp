@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>イベント一覧・申し込み | 児童発達支援 pocopoco</title>
+    <title>体験会一覧・申し込み | 児童発達支援 pocopoco</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,15 +34,17 @@
     <main class="pt-20 pb-12 px-4 max-w-md mx-auto">
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-brand-main mb-2">
-                <i class="fas fa-calendar-alt text-brand-accent mr-2"></i>イベント一覧
+                <i class="fas fa-calendar-alt text-brand-accent mr-2"></i>体験会一覧
             </h1>
             <p class="text-sm text-gray-600">
-                施設内で開催する週1回のイベントです。<br>
-                お気軽にご参加ください。
+                心と体の成長を促す、<br>
+                当事業所ならではの支援を体験いただけます。<br>
+                日々の関わりや発達について、<br>
+                遊びながら気軽にご相談ください。
             </p>
         </div>
 
-        <!-- イベント一覧 -->
+        <!-- 体験会一覧 -->
         <div id="eventsList" class="space-y-4 mb-8">
             <!-- イベントカードはJavaScriptで動的に生成 -->
         </div>
@@ -114,6 +116,32 @@
                         </select>
                     </div>
 
+                    <!-- 発達についての質問 -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">お子さまの成長や発達について、現在気になっていることはありますか？ <span class="text-red-500 text-xs">*必須</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+                                <input type="radio" name="developmentConcern" value="相談したいことがある" required class="mr-3 text-brand-cta focus:ring-brand-cta">
+                                <span class="text-sm">相談したいことがある</span>
+                            </label>
+                            <label class="flex items-center p-3 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+                                <input type="radio" name="developmentConcern" value="少し気になっていることがある" required class="mr-3 text-brand-cta focus:ring-brand-cta">
+                                <span class="text-sm">少し気になっていることがある</span>
+                            </label>
+                            <label class="flex items-center p-3 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+                                <input type="radio" name="developmentConcern" value="今のところ特になし" required class="mr-3 text-brand-cta focus:ring-brand-cta">
+                                <span class="text-sm">今のところ特になし</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 発達の悩み詳細（なし以外を選択した場合のみ表示） -->
+                    <div id="developmentConcernDetailSection" class="hidden">
+                        <label for="developmentConcernDetail" class="block text-sm font-bold text-gray-700 mb-1">詳細 <span class="text-red-500 text-xs">*必須</span></label>
+                        <textarea id="developmentConcernDetail" name="developmentConcernDetail" rows="3" placeholder="具体的な悩みや気になる点を簡潔にご記入ください" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">※短文でお願いします</p>
+                    </div>
+
                     <!-- その他ご質問など -->
                     <div>
                         <label for="message" class="block text-sm font-bold text-gray-700 mb-1">その他ご質問など <span class="text-gray-400 text-xs">(任意)</span></label>
@@ -142,7 +170,7 @@
             </p>
             <div class="space-y-2">
                 <button id="backToEvents" class="block w-full bg-brand-main text-white font-bold py-3 rounded-full hover:bg-brown-700 transition">
-                    イベント一覧に戻る
+                    体験会一覧に戻る
                 </button>
                 <a href="index.html" class="block w-full bg-gray-100 text-gray-700 font-bold py-3 rounded-full hover:bg-gray-200 transition">
                     TOPへ戻る
@@ -153,7 +181,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv4fb-2jpt3xz8JrB1rs2BAWqnKt4vNIao0o3kc6lulGiY4qjB76JpTF6Yxjzi03t5/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw15RQhz7quX6KzxHmkngsvx5w69VWPgiFD07Z9wQ34bzIS0Mq-xl5zh1eSsY7g9R9N/exec";
 
         let eventsData = [];
         let selectedEvent = null;
@@ -189,6 +217,18 @@
             return `${month}月${day}日（${weekday}）`;
         }
 
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            // "10:00-14:00" 形式を "10:00〜14:00" に変換（時は使わない）
+            const parts = timeString.split('-');
+            if (parts.length === 2) {
+                const startTime = parts[0].trim();
+                const endTime = parts[1].trim();
+                return `${startTime}〜${endTime}`;
+            }
+            return timeString;
+        }
+
         // イベントカードを生成
         function renderEvents() {
             const eventsList = document.getElementById('eventsList');
@@ -205,6 +245,14 @@
             });
 
             sortedEvents.forEach(event => {
+                // デバッグ: イベントデータを確認
+                console.log('📝 イベントデータ:', {
+                    id: event.id,
+                    title: event.title,
+                    imageUrl: event.imageUrl,
+                    hasImageUrl: !!event.imageUrl
+                });
+                
                 const availableSlots = event.capacity - (event.currentParticipants || 0);
                 const isFull = availableSlots <= 0;
                 const isAlmostFull = availableSlots <= 2;
@@ -212,10 +260,45 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition';
                 
+                // Base64データをデータURIとして表示（Google Drive不要）
+                let displayImageUrl = null;
+                if (event.imageUrl) {
+                    let imageData = event.imageUrl;
+                    
+                    // Base64データかどうかを判定（長さが100文字以上で、httpで始まらない）
+                    if (imageData.length > 100 && !imageData.startsWith('http')) {
+                        // Base64データをデータURIに変換
+                        displayImageUrl = 'data:image/jpeg;base64,' + imageData;
+                        console.log('🖼️ Base64データをデータURIに変換: ' + imageData.substring(0, 50) + '...');
+                    }
+                    // 後方互換性: 古い形式のURLの場合はそのまま使用
+                    else if (imageData.indexOf('/file/d/') !== -1 || imageData.indexOf('uc?export=view&id=') !== -1 || imageData.startsWith('http')) {
+                        // Google Driveの画像URLを変換
+                        if (imageData.indexOf('uc?export=view&id=') !== -1) {
+                            displayImageUrl = imageData;
+                        }
+                        else if (imageData.indexOf('/file/d/') !== -1) {
+                            const fileIdMatch = imageData.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                            if (fileIdMatch && fileIdMatch[1]) {
+                                displayImageUrl = 'https://drive.google.com/uc?export=view&id=' + fileIdMatch[1];
+                            }
+                        }
+                        else {
+                            displayImageUrl = imageData;
+                        }
+                        console.log('🖼️ 古い形式のURLを使用（後方互換性）: ' + imageData);
+                    }
+                    // その他の場合はBase64データとして扱う
+                    else if (imageData.length > 50) {
+                        displayImageUrl = 'data:image/jpeg;base64,' + imageData;
+                        console.log('🖼️ Base64データとして扱う: ' + imageData.substring(0, 50) + '...');
+                    }
+                }
+                
                 card.innerHTML = `
-                    ${event.imageUrl ? `
+                    ${displayImageUrl ? `
                     <div class="w-full h-48 bg-gray-200 overflow-hidden">
-                        <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-full object-cover">
+                        <img src="${displayImageUrl}" alt="${event.title}" class="w-full h-full object-cover" loading="lazy" onerror="console.error('❌ 画像読み込みエラー:', this.src); this.parentElement.style.backgroundColor='#ffcccc'; this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-500\\'>画像を読み込めませんでした</div>';">
                     </div>
                     ` : ''}
                     <div class="p-5">
@@ -229,16 +312,49 @@
                                 <h3 class="text-lg font-bold text-brand-main mb-2">${event.title}</h3>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">${event.description}</p>
+                        <div class="mb-4">
+                            ${(function() {
+                                const desc = event.description || '';
+                                const lines = desc.split('\n');
+                                const previewLines = lines.slice(0, 3);
+                                const previewText = previewLines.join('\n');
+                                const hasMore = lines.length > 3 || desc.length > 150;
+                                const escapedDesc = desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                                const escapedPreview = previewText.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                                
+                                if (hasMore) {
+                                    return `
+                                        <p class="text-sm text-gray-600 leading-relaxed description-text" data-full-text="${escapedDesc}">
+                                            ${escapedPreview}...
+                                        </p>
+                                        <button class="text-xs text-brand-cta hover:text-orange-600 font-bold mt-1 description-toggle-btn" data-event-id="${event.id}">
+                                            続きを読む
+                                        </button>
+                                    `;
+                                } else {
+                                    return `<p class="text-sm text-gray-600 leading-relaxed">${escapedDesc}</p>`;
+                                }
+                            })()}
+                        </div>
                         <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-gray-700">
                                 <i class="fas fa-calendar-alt text-brand-cta mr-2 w-5"></i>
-                                <span>${formatDate(event.date)}</span>
+                                <span>${formatDate(event.date)} ${formatTime(event.time)}</span>
                             </div>
                             <div class="flex items-center text-sm text-gray-700">
-                                <i class="fas fa-clock text-brand-cta mr-2 w-5"></i>
-                                <span>${event.time}</span>
+                                <i class="fas fa-map-marker-alt text-brand-cta mr-2 w-5"></i>
+                                <span>${event.venue || 'pocopoco 東京都府中新町1丁目71-7'}</span>
                             </div>
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-yen-sign text-brand-cta mr-2 w-5"></i>
+                                <span>参加費: ${event.fee || '無料'}</span>
+                            </div>
+                            ${event.items && event.items.trim() !== '' ? `
+                            <div class="flex items-start text-sm text-gray-700">
+                                <i class="fas fa-shopping-bag text-brand-cta mr-2 w-5 mt-0.5"></i>
+                                <span>持ち物: ${event.items}</span>
+                            </div>
+                            ` : ''}
                             <div class="flex items-center text-sm text-gray-700">
                                 <i class="fas fa-users text-brand-cta mr-2 w-5"></i>
                                 <span>定員: ${event.capacity}名 / 残り${availableSlots}名</span>
@@ -264,6 +380,30 @@
                     openEventModal(eventId);
                 });
             });
+            
+            // 「続きを読む」ボタンのイベントリスナーを設定
+            document.querySelectorAll('.description-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const descriptionText = this.previousElementSibling;
+                    const fullText = descriptionText.dataset.fullText;
+                    
+                    if (this.textContent.trim() === '続きを読む') {
+                        // 全文を表示（HTMLエスケープを解除）
+                        const decodedFullText = fullText.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                        descriptionText.textContent = decodedFullText;
+                        this.textContent = '閉じる';
+                    } else {
+                        // 冒頭3行だけ表示
+                        const decodedFullText = fullText.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                        const lines = decodedFullText.split('\n');
+                        const previewLines = lines.slice(0, 3);
+                        const previewText = previewLines.join('\n');
+                        descriptionText.textContent = previewText + '...';
+                        this.textContent = '続きを読む';
+                    }
+                });
+            });
         }
 
         // モーダルを開く
@@ -277,18 +417,37 @@
             selectedEventInfo.innerHTML = `
                 <h3 class="font-bold text-lg text-brand-main mb-2">${selectedEvent.title}</h3>
                 <div class="space-y-1 text-sm text-gray-600">
-                    <div><i class="fas fa-calendar-alt text-brand-cta mr-2"></i>${formatDate(selectedEvent.date)}</div>
-                    <div><i class="fas fa-clock text-brand-cta mr-2"></i>${selectedEvent.time}</div>
+                    <div><i class="fas fa-calendar-alt text-brand-cta mr-2"></i>${formatDate(selectedEvent.date)} ${formatTime(selectedEvent.time)}</div>
                     <div><i class="fas fa-users text-brand-cta mr-2"></i>定員: ${selectedEvent.capacity}名</div>
                 </div>
             `;
 
             // フォームをリセット
             document.getElementById('eventForm').reset();
+            // 詳細入力欄を非表示にリセット
+            document.getElementById('developmentConcernDetailSection').classList.add('hidden');
+            document.getElementById('developmentConcernDetail').required = false;
             
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
+        
+        // 発達の悩み選択に応じて詳細入力欄を表示/非表示
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'developmentConcern') {
+                const detailSection = document.getElementById('developmentConcernDetailSection');
+                const detailInput = document.getElementById('developmentConcernDetail');
+                
+                if (e.target.value === '今のところ特になし') {
+                    detailSection.classList.add('hidden');
+                    detailInput.required = false;
+                    detailInput.value = ''; // 値をクリア
+                } else {
+                    detailSection.classList.remove('hidden');
+                    detailInput.required = true;
+                }
+            }
+        });
 
         // モーダルを閉じる
         function closeEventModal() {
@@ -296,6 +455,9 @@
             modal.classList.add('hidden');
             document.body.style.overflow = 'auto';
             selectedEvent = null;
+            // 詳細入力欄をリセット
+            document.getElementById('developmentConcernDetailSection').classList.add('hidden');
+            document.getElementById('developmentConcernDetail').required = false;
         }
 
         // モーダル外をクリックで閉じる
@@ -328,6 +490,17 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 送信中...';
 
             const formData = new FormData(this);
+            const developmentConcern = formData.get('developmentConcern');
+            const developmentConcernDetail = formData.get('developmentConcernDetail') || '';
+            
+            // 発達の悩みが「今のところ特になし」以外の場合、詳細が必須
+            if (developmentConcern && developmentConcern !== '今のところ特になし' && !developmentConcernDetail.trim()) {
+                alert('発達の悩みの詳細を入力してください。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                return;
+            }
+            
             const data = {
                 formType: 'event',
                 eventId: selectedEvent.id,
@@ -340,6 +513,8 @@
                 email: formData.get('email'),
                 tel: formData.get('tel'),
                 participants: formData.get('participants'),
+                developmentConcern: developmentConcern,
+                developmentConcernDetail: developmentConcern === '今のところ特になし' ? '' : developmentConcernDetail,
                 message: formData.get('message') || ''
             };
 
@@ -372,7 +547,7 @@
         document.getElementById('backToEvents')?.addEventListener('click', function() {
             document.getElementById('successMessage').classList.add('hidden');
             document.getElementById('eventsList').classList.remove('hidden');
-            renderEvents(); // イベント一覧を再描画（残り人数を更新するため）
+            renderEvents(); // 体験会一覧を再描画（残り人数を更新するため）
         });
 
         // 初期化
