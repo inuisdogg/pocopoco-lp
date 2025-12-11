@@ -548,6 +548,13 @@ function doPost(e) {
             userEmailBody += params.message + "\n";
           }
           
+          userEmailBody += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+          userEmailBody += "【ご連絡について】\n";
+          userEmailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+          userEmailBody += "お申し込みいただき、誠にありがとうございます。\n";
+          userEmailBody += "内容を確認させていただき、後日担当者よりご連絡させていただきます。\n";
+          userEmailBody += "今しばらくお待ちください。\n\n";
+          
           userEmailBody += getSNSContactInfo();
           userEmailBody += getEmailSignature();
           
