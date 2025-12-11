@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>イベント管理画面 | 児童発達支援 pocopoco</title>
+    <title>体験会管理画面 | 児童発達支援 pocopoco</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCF0; color: #4A4A4A; }
         h1, h2 { font-family: 'Zen Maru Gothic', sans-serif; }
+        /* ブランドカラーのフォールバック */
+        .bg-brand-main { background-color: #8B5A2B !important; }
+        .bg-brand-cta { background-color: #FF8F00 !important; }
+        .bg-brand-accent { background-color: #7CB342 !important; }
+        .text-brand-main { color: #8B5A2B !important; }
     </style>
 </head>
 <body class="antialiased">
@@ -27,7 +34,7 @@
             </a>
             <div class="flex gap-2">
                 <a href="events.html" class="text-sm text-gray-500 hover:text-brand-main transition">
-                    <i class="fas fa-calendar-alt mr-1"></i>イベント一覧
+                    <i class="fas fa-calendar-alt mr-1"></i>体験会一覧
                 </a>
                 <button id="logoutBtn" class="text-sm text-red-500 hover:text-red-700 transition">
                     <i class="fas fa-sign-out-alt mr-1"></i>ログアウト
@@ -39,7 +46,7 @@
     <main class="pt-20 pb-12 px-4 max-w-md mx-auto">
         <!-- ログイン画面 -->
         <div id="loginScreen" class="bg-white p-8 rounded-xl shadow-md">
-            <h1 class="text-2xl font-bold text-brand-main mb-6 text-center">イベント管理画面</h1>
+            <h1 class="text-2xl font-bold text-brand-main mb-6 text-center">体験会管理画面</h1>
             <form id="loginForm" class="space-y-4">
                 <div>
                     <label for="password" class="block text-sm font-bold text-gray-700 mb-1">パスワード</label>
@@ -55,7 +62,7 @@
         <div id="adminScreen" class="hidden">
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-bold text-brand-main mb-2">
-                    <i class="fas fa-cog text-brand-accent mr-2"></i>イベント管理
+                    <i class="fas fa-cog text-brand-accent mr-2"></i>体験会管理
                 </h1>
             </div>
 
@@ -65,13 +72,13 @@
                     開催予定
                 </button>
                 <button id="archiveTab" class="flex-1 py-2 px-4 rounded-md bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition">
-                    過去のイベント
+                    過去の体験会
                 </button>
             </div>
 
-            <!-- 新規イベント追加ボタン -->
+            <!-- 新規体験会追加ボタン -->
             <button id="addEventBtn" class="w-full bg-brand-cta text-white font-bold py-3 rounded-full shadow-md hover:bg-orange-600 transition mb-6">
-                <i class="fas fa-plus mr-2"></i>新規イベントを追加
+                <i class="fas fa-plus mr-2"></i>新規体験会を追加
             </button>
 
             <!-- イベント一覧 -->
@@ -85,11 +92,11 @@
             </div>
         </div>
 
-        <!-- イベント編集モーダル -->
+        <!-- 体験会編集モーダル -->
         <div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
                 <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                    <h2 id="modalTitle" class="text-xl font-bold text-brand-main">新規イベント追加</h2>
+                    <h2 id="modalTitle" class="text-xl font-bold text-brand-main">新規体験会追加</h2>
                     <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -97,13 +104,16 @@
                 
                 <form id="eventForm" class="p-6 space-y-6">
                     <!-- イベント画像 -->
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">イベント画像 <span class="text-gray-400 text-xs">(任意)</span></label>
+                    <div id="imageUploadSection" style="display: block !important;">
+                        <label for="eventImage" class="block text-sm font-bold text-gray-700 mb-1">イベント画像 <span class="text-gray-400 text-xs">(任意)</span></label>
                         <div id="imagePreview" class="mb-2 hidden">
-                            <img id="previewImg" src="" alt="プレビュー" class="w-full h-48 object-cover rounded-lg border border-gray-300">
+                            <img id="previewImg" src="" alt="プレビュー" class="w-full h-48 object-cover rounded-lg border border-gray-300 mb-2">
+                            <button id="reCropBtn" type="button" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-bold text-sm">
+                                <i class="fas fa-crop mr-2"></i>範囲を修正する
+                            </button>
                         </div>
-                        <input type="file" id="eventImage" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
-                        <p class="text-xs text-gray-500 mt-1">※画像は自動的にGoogle Driveに保存されます</p>
+                        <input type="file" id="eventImage" name="eventImage" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3" style="display: block !important; visibility: visible !important;">
+                        <p class="text-xs text-gray-500 mt-1">※画像を選択するとトリミング画面が表示されます</p>
                     </div>
 
                     <!-- イベント名 -->
@@ -131,20 +141,26 @@
                         <textarea id="eventDescription" required rows="3" placeholder="イベントの詳細説明を入力してください" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3"></textarea>
                     </div>
 
-                    <!-- 開催日 -->
+                    <!-- 開催日時 -->
                     <div>
-                        <label for="eventDate" class="block text-sm font-bold text-gray-700 mb-1">開催日 <span class="text-red-500 text-xs">*必須</span></label>
-                        <input type="date" id="eventDate" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">開催日時 <span class="text-red-500 text-xs">*必須</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">開始日時</label>
+                                <input type="text" id="eventStartDateTime" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3" placeholder="開始日時を選択" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">終了日時</label>
+                                <input type="text" id="eventEndDateTime" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3" placeholder="終了日時を選択" readonly>
+                            </div>
+                        </div>
+                        <!-- 非表示フィールド（後方互換性のため） -->
+                        <input type="hidden" id="eventDate">
+                        <input type="hidden" id="eventStartTime">
+                        <input type="hidden" id="eventEndTime">
+                        <p class="text-xs text-gray-500 mt-1">※日時をクリックするとカレンダーと時刻選択が表示されます</p>
                     </div>
 
-                    <!-- 開催時間 -->
-                    <div>
-                        <label for="eventTime" class="block text-sm font-bold text-gray-700 mb-1">開催時間 <span class="text-red-500 text-xs">*必須</span></label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="time" id="eventStartTime" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
-                            <input type="time" id="eventEndTime" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
-                        </div>
-                    </div>
 
                     <!-- 定員 -->
                     <div>
@@ -156,6 +172,38 @@
                     <div>
                         <label for="eventCurrentParticipants" class="block text-sm font-bold text-gray-700 mb-1">現在の参加者数 <span class="text-gray-400 text-xs">(任意)</span></label>
                         <input type="number" id="eventCurrentParticipants" min="0" value="0" placeholder="0" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 会場 -->
+                    <div>
+                        <label for="eventVenue" class="block text-sm font-bold text-gray-700 mb-1">会場 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="text" id="eventVenue" required value="pocopoco 東京都府中新町1丁目71-7" placeholder="会場を入力してください" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 参加費 -->
+                    <div>
+                        <label for="eventFee" class="block text-sm font-bold text-gray-700 mb-1">参加費 <span class="text-red-500 text-xs">*必須</span></label>
+                        <input type="text" id="eventFee" required value="無料" placeholder="参加費を入力してください（例：無料、500円など）" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 持ち物 -->
+                    <div>
+                        <label for="eventItems" class="block text-sm font-bold text-gray-700 mb-1">持ち物 <span class="text-gray-400 text-xs">(任意)</span></label>
+                        <input type="text" id="eventItems" placeholder="持ち物を入力してください（例：筆記用具、タオルなど）" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                    </div>
+
+                    <!-- 登録者 -->
+                    <div>
+                        <label for="eventRegistrant" class="block text-sm font-bold text-gray-700 mb-1">登録者 <span class="text-red-500 text-xs">*必須</span></label>
+                        <select id="eventRegistrant" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-cta focus:border-brand-cta block p-3">
+                            <option value="">選択してください</option>
+                            <option value="畠昂哉">畠昂哉</option>
+                            <option value="酒井くるみ">酒井くるみ</option>
+                            <option value="平井菜央">平井菜央</option>
+                            <option value="水石晶子">水石晶子</option>
+                            <option value="長尾麻由子">長尾麻由子</option>
+                            <option value="畠真姫">畠真姫</option>
+                        </select>
                     </div>
 
                     <div class="pt-4 space-y-2">
@@ -173,7 +221,7 @@
 
     <script>
         // Google Apps Script URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC_I5AZT7YyvXo5Vp6P7n0cphwBbcnKD4krmmbrASPkAuqPJPktSoU0T3w5yyBr-hK/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxVT5qV4GA3OHhamceSF5SSu84vJTUNFChZ_X9XELGUfwWiEoHJYMIW7MlxBop8Cdx/exec";
         
         // 簡単なパスワード認証（本番環境ではより強固な認証を推奨）
         const ADMIN_PASSWORD = "pocopoco2025"; // 実際の運用では変更してください
@@ -186,11 +234,20 @@
             e.preventDefault();
             const password = document.getElementById('password').value;
             
-            if (password === ADMIN_PASSWORD) {
+            // デバッグ用（本番環境では削除推奨）
+            console.log('入力されたパスワードの長さ:', password.length);
+            console.log('設定されているパスワードの長さ:', ADMIN_PASSWORD.length);
+            
+            // 前後の空白を削除して比較
+            const trimmedPassword = password.trim();
+            
+            if (trimmedPassword === ADMIN_PASSWORD) {
                 sessionStorage.setItem('adminLoggedIn', 'true');
                 showAdminScreen();
             } else {
-                alert('パスワードが正しくありません。');
+                alert('パスワードが正しくありません。\n\n正しいパスワードを入力してください。');
+                // パスワードフィールドをクリア
+                document.getElementById('password').value = '';
             }
         });
 
@@ -237,18 +294,26 @@
 
         // イベント一覧を読み込む
         function loadEvents() {
-            fetch(SCRIPT_URL + '?action=getEvents&isArchived=' + (isArchiveMode ? 'true' : 'false'))
-                .then(response => response.json())
+            const url = SCRIPT_URL + '?action=getEvents&isArchived=' + (isArchiveMode ? 'true' : 'false');
+            console.log('📥 イベント一覧を取得:', url);
+            
+            fetch(url)
+                .then(response => {
+                    console.log('📥 レスポンス受信:', response.status, response.statusText);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('📥 取得したデータ:', data);
                     if (data.status === 'success') {
+                        console.log('✅ イベント取得成功:', data.events ? data.events.length + '件' : '0件');
                         renderEvents(data.events || [], isArchiveMode);
                     } else {
-                        console.error('イベントの取得に失敗しました:', data.message);
+                        console.error('❌ イベントの取得に失敗しました:', data.message);
                         renderEvents([], isArchiveMode);
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('❌ イベント取得エラー:', error);
                     renderEvents([], isArchiveMode);
                 });
         }
@@ -259,21 +324,69 @@
             container.innerHTML = '';
 
             if (events.length === 0) {
-                container.innerHTML = '<div class="text-center text-gray-500 py-8">イベントがありません</div>';
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">体験会がありません</div>';
                 return;
             }
 
             events.forEach(event => {
+                // デバッグ: イベントデータを確認
+                console.log('📝 イベントデータ:', {
+                    id: event.id,
+                    title: event.title,
+                    imageUrl: event.imageUrl,
+                    imageUrlType: typeof event.imageUrl,
+                    hasImageUrl: !!event.imageUrl,
+                    imageUrlLength: event.imageUrl ? event.imageUrl.length : 0
+                });
+                
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-200';
                 
-                const availableSlots = event.capacity - (event.currentParticipants || 0);
-                const isFull = availableSlots <= 0;
+                // 状態フラグ: currentParticipantsの値で判定
+                // -1 = 残りわずか、-2 = 満員、0以上 = 通常（受付中）
+                const currentParticipants = event.currentParticipants || 0;
+                const isFull = currentParticipants === -2;
+                const isAlmostFull = currentParticipants === -1;
+                
+                // Base64データをデータURIとして表示（Google Drive不要）
+                let displayImageUrl = null;
+                if (event.imageUrl) {
+                    let imageData = event.imageUrl;
+                    
+                    // Base64データかどうかを判定（長さが100文字以上で、httpで始まらない）
+                    if (imageData.length > 100 && !imageData.startsWith('http')) {
+                        // Base64データをデータURIに変換
+                        displayImageUrl = 'data:image/jpeg;base64,' + imageData;
+                        console.log('🖼️ Base64データをデータURIに変換: ' + imageData.substring(0, 50) + '...');
+                    }
+                    // 後方互換性: 古い形式のURLの場合はそのまま使用
+                    else if (imageData.indexOf('/file/d/') !== -1 || imageData.indexOf('uc?export=view&id=') !== -1 || imageData.startsWith('http')) {
+                        // Google Driveの画像URLを変換
+                        if (imageData.indexOf('uc?export=view&id=') !== -1) {
+                            displayImageUrl = imageData;
+                        }
+                        else if (imageData.indexOf('/file/d/') !== -1) {
+                            const fileIdMatch = imageData.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                            if (fileIdMatch && fileIdMatch[1]) {
+                                displayImageUrl = 'https://drive.google.com/uc?export=view&id=' + fileIdMatch[1];
+                            }
+                        }
+                        else {
+                            displayImageUrl = imageData;
+                        }
+                        console.log('🖼️ 古い形式のURLを使用（後方互換性）: ' + imageData);
+                    }
+                    // その他の場合はBase64データとして扱う
+                    else if (imageData.length > 50) {
+                        displayImageUrl = 'data:image/jpeg;base64,' + imageData;
+                        console.log('🖼️ Base64データとして扱う: ' + imageData.substring(0, 50) + '...');
+                    }
+                }
                 
                 card.innerHTML = `
-                    ${event.imageUrl ? `
+                    ${displayImageUrl ? `
                     <div class="w-full h-48 bg-gray-200 overflow-hidden">
-                        <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-full object-cover">
+                        <img src="${displayImageUrl}" alt="${event.title}" class="w-full h-full object-cover" onerror="console.error('❌ 画像読み込みエラー:', this.src); this.parentElement.style.backgroundColor='#ffcccc'; this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-gray-500\\'>画像を読み込めませんでした</div>';">
                     </div>
                     ` : ''}
                     <div class="p-5">
@@ -282,6 +395,7 @@
                                 <div class="flex items-center gap-2 mb-2 flex-wrap">
                                     <span class="bg-brand-accent text-white text-xs px-2 py-1 rounded-full font-bold">${event.category}</span>
                                     ${isFull ? '<span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-bold">満員</span>' : ''}
+                                    ${isAlmostFull && !isFull ? '<span class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full font-bold">残りわずか</span>' : ''}
                                     ${isArchived ? '<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-bold">終了</span>' : ''}
                                 </div>
                                 <h3 class="text-lg font-bold text-brand-main mb-2">${event.title}</h3>
@@ -291,27 +405,53 @@
                         <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-gray-700">
                                 <i class="fas fa-calendar-alt text-brand-cta mr-2 w-5"></i>
-                                <span>${formatDate(event.date)}</span>
+                                <span>${formatDate(event.date)} ${formatTime(event.time)}</span>
                             </div>
                             <div class="flex items-center text-sm text-gray-700">
-                                <i class="fas fa-clock text-brand-cta mr-2 w-5"></i>
-                                <span>${event.time}</span>
+                                <i class="fas fa-map-marker-alt text-brand-cta mr-2 w-5"></i>
+                                <span>${event.venue || 'pocopoco 東京都府中新町1丁目71-7'}</span>
                             </div>
+                            <div class="flex items-center text-sm text-gray-700">
+                                <i class="fas fa-yen-sign text-brand-cta mr-2 w-5"></i>
+                                <span>参加費: ${event.fee || '無料'}</span>
+                            </div>
+                            ${event.items && event.items.trim() !== '' ? `
+                            <div class="flex items-start text-sm text-gray-700">
+                                <i class="fas fa-shopping-bag text-brand-cta mr-2 w-5 mt-0.5"></i>
+                                <span>持ち物: ${event.items}</span>
+                            </div>
+                            ` : ''}
                             <div class="flex items-center text-sm text-gray-700">
                                 <i class="fas fa-users text-brand-cta mr-2 w-5"></i>
-                                <span>定員: ${event.capacity}名 / 参加: ${event.currentParticipants || 0}名</span>
+                                <span>定員: ${event.capacity}名 / 参加: ${(event.currentParticipants !== null && event.currentParticipants !== undefined) ? event.currentParticipants : 0}名</span>
                             </div>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-col gap-2">
                             ${!isArchived ? `
-                            <button class="flex-1 bg-brand-main text-white font-bold py-2 rounded-lg hover:bg-brown-700 transition edit-event-btn" data-event-id="${event.id}">
-                                <i class="fas fa-edit mr-1"></i>編集
-                            </button>
-                            <button class="flex-1 bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition archive-event-btn" data-event-id="${event.id}">
-                                <i class="fas fa-archive mr-1"></i>アーカイブ
-                            </button>
+                            <div class="flex gap-2">
+                                <button class="flex-1 bg-brand-main text-white font-bold py-2 rounded-lg hover:bg-brown-700 transition edit-event-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-edit mr-1"></i>編集
+                                </button>
+                                <button class="flex-1 bg-brand-cta text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition archive-event-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-archive mr-1"></i>アーカイブ
+                                </button>
+                            </div>
+                            <div class="flex gap-2">
+                                ${!isFull ? `
+                                <button class="flex-1 bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition set-almost-full-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>残りわずか
+                                </button>
+                                <button class="flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition set-full-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-ban mr-1"></i>満員にする
+                                </button>
+                                ` : `
+                                <button class="flex-1 bg-green-500 text-white font-bold py-2 rounded-lg hover:bg-green-600 transition reopen-registration-btn" data-event-id="${event.id}">
+                                    <i class="fas fa-unlock mr-1"></i>受付再開
+                                </button>
+                                `}
+                            </div>
                             ` : ''}
-                            <button class="flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition delete-event-btn" data-event-id="${event.id}">
+                            <button class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition delete-event-btn" data-event-id="${event.id}">
                                 <i class="fas fa-trash mr-1"></i>削除
                             </button>
                         </div>
@@ -333,6 +473,90 @@
             document.querySelectorAll('.delete-event-btn').forEach(btn => {
                 btn.addEventListener('click', () => deleteEvent(parseInt(btn.dataset.eventId)));
             });
+            
+            // 「残りわずか」ボタンのイベントリスナー
+            document.querySelectorAll('.set-almost-full-btn').forEach(btn => {
+                btn.addEventListener('click', () => setAlmostFull(parseInt(btn.dataset.eventId)));
+            });
+            
+            // 「満員にする」ボタンのイベントリスナー
+            document.querySelectorAll('.set-full-btn').forEach(btn => {
+                btn.addEventListener('click', () => setFull(parseInt(btn.dataset.eventId)));
+            });
+            
+            // 「受付再開」ボタンのイベントリスナー
+            document.querySelectorAll('.reopen-registration-btn').forEach(btn => {
+                btn.addEventListener('click', () => reopenRegistration(parseInt(btn.dataset.eventId)));
+            });
+        }
+        
+        // 残りわずかに設定
+        function setAlmostFull(eventId) {
+            if (!confirm('この体験会を「残りわずか」に設定しますか？')) return;
+            
+            console.log('🔄 残りわずか設定開始: eventId =', eventId);
+            
+            // CORSエラーを回避するため、URLパラメータとして送信
+            const url = SCRIPT_URL + '?action=setAlmostFull&eventId=' + eventId;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(function() {
+                // no-corsモードではレスポンスを読めないため、成功とみなす
+                alert('「残りわずか」に設定しました。');
+                loadEvents();
+            })
+            .catch(function(error) {
+                console.error('❌ 残りわずか設定エラー:', error);
+                alert('設定に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）を確認してください。');
+            });
+        }
+        
+        // 満員に設定
+        function setFull(eventId) {
+            if (!confirm('この体験会を「満員」に設定しますか？\n（申し込み受付を終了します）')) return;
+            
+            console.log('🔄 満員設定開始: eventId =', eventId);
+            
+            // CORSエラーを回避するため、URLパラメータとして送信
+            const url = SCRIPT_URL + '?action=setFull&eventId=' + eventId;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                // no-corsモードではレスポンスを読めないため、成功とみなす
+                alert('「満員」に設定しました。申し込み受付を終了しました。');
+                loadEvents();
+            })
+            .catch(error => {
+                console.error('❌ 満員設定エラー:', error);
+                alert('設定に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）を確認してください。');
+            });
+        }
+        
+        // 受付再開
+        function reopenRegistration(eventId) {
+            if (!confirm('この体験会の申し込み受付を再開しますか？')) return;
+            
+            console.log('🔄 受付再開開始: eventId =', eventId);
+            
+            // CORSエラーを回避するため、URLパラメータとして送信
+            const url = SCRIPT_URL + '?action=reopenRegistration&eventId=' + eventId;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                // no-corsモードではレスポンスを読めないため、成功とみなす
+                alert('申し込み受付を再開しました。');
+                loadEvents();
+            })
+            .catch(error => {
+                console.error('❌ 受付再開エラー:', error);
+                alert('設定に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）を確認してください。');
+            });
         }
 
         // 日付をフォーマット
@@ -345,17 +569,44 @@
             return `${month}月${day}日（${weekday}）`;
         }
 
-        // 新規イベント追加
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            // "10:00-14:00" 形式を "10:00〜14:00" に変換（時は使わない）
+            const parts = timeString.split('-');
+            if (parts.length === 2) {
+                const startTime = parts[0].trim();
+                const endTime = parts[1].trim();
+                return `${startTime}〜${endTime}`;
+            }
+            return timeString;
+        }
+
+        // 新規体験会追加
         document.getElementById('addEventBtn')?.addEventListener('click', function() {
             currentEditingEventId = null;
-            document.getElementById('modalTitle').textContent = '新規イベント追加';
+            document.getElementById('modalTitle').textContent = '新規体験会追加';
+            // 新規追加時はボタンのテキストを「保存」に戻す
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>保存';
+            }
             document.getElementById('eventForm').reset();
             document.getElementById('imagePreview').classList.add('hidden');
+            // 画像入力フィールドを確実に表示
+            const imageInput = document.getElementById('eventImage');
+            if (imageInput) {
+                imageInput.style.display = 'block';
+                imageInput.value = ''; // ファイル選択をリセット
+            }
+            const imageUploadSection = document.getElementById('imageUploadSection');
+            if (imageUploadSection) {
+                imageUploadSection.style.display = 'block';
+            }
             document.getElementById('eventModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         });
 
-        // イベント編集
+        // 体験会編集
         function editEvent(eventId) {
             fetch(SCRIPT_URL + '?action=getEvent&eventId=' + eventId)
                 .then(response => response.json())
@@ -363,22 +614,78 @@
                     if (data.status === 'success' && data.event) {
                         const event = data.event;
                         currentEditingEventId = eventId;
-                        document.getElementById('modalTitle').textContent = 'イベント編集';
-                        document.getElementById('eventTitle').value = event.title;
-                        document.getElementById('eventCategory').value = event.category;
-                        document.getElementById('eventDescription').value = event.description;
-                        document.getElementById('eventDate').value = event.date;
-                        const [startTime, endTime] = event.time.split('-');
-                        document.getElementById('eventStartTime').value = startTime.trim();
-                        document.getElementById('eventEndTime').value = endTime.trim();
-                        document.getElementById('eventCapacity').value = event.capacity;
-                        document.getElementById('eventCurrentParticipants').value = event.currentParticipants || 0;
+                        document.getElementById('modalTitle').textContent = '体験会編集';
+                        // 編集時はボタンのテキストを「更新する」に変更
+                        const submitBtn = document.getElementById('submitBtn');
+                        if (submitBtn) {
+                            submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>更新する';
+                        }
                         
-                        if (event.imageUrl) {
+                        // フォームをリセットせず、直接値を設定
+                        document.getElementById('eventTitle').value = event.title || '';
+                        document.getElementById('eventCategory').value = event.category || '';
+                        document.getElementById('eventDescription').value = event.description || '';
+                        
+                        // 日付と時間の処理
+                        let formattedDate = event.date || '';
+                        if (formattedDate && formattedDate.includes('/')) {
+                            formattedDate = formattedDate.replace(/\//g, '-');
+                        }
+                        
+                        // 時間の処理
+                        let startDateTime = '';
+                        let endDateTime = '';
+                        if (event.time && formattedDate) {
+                            const [startTime, endTime] = event.time.split('-');
+                            if (startTime && endTime) {
+                                startDateTime = formattedDate + ' ' + startTime.trim();
+                                endDateTime = formattedDate + ' ' + endTime.trim();
+                            }
+                        }
+                        
+                        // 開始日時と終了日時を設定
+                        if (startDateTimePicker && startDateTime) {
+                            startDateTimePicker.setDate(startDateTime, false);
+                        }
+                        if (endDateTimePicker && endDateTime) {
+                            endDateTimePicker.setDate(endDateTime, false);
+                        }
+                        
+                        // 非表示フィールドにも設定（後方互換性）
+                        document.getElementById('eventDate').value = formattedDate;
+                        if (event.time) {
+                            const [startTime, endTime] = event.time.split('-');
+                            document.getElementById('eventStartTime').value = startTime ? startTime.trim() : '';
+                            document.getElementById('eventEndTime').value = endTime ? endTime.trim() : '';
+                        }
+                        
+                        document.getElementById('eventCapacity').value = event.capacity || '';
+                        document.getElementById('eventCurrentParticipants').value = event.currentParticipants || 0;
+                        document.getElementById('eventVenue').value = event.venue || 'pocopoco 東京都府中新町1丁目71-7';
+                        document.getElementById('eventFee').value = event.fee || '無料';
+                        document.getElementById('eventItems').value = event.items || '';
+                        document.getElementById('eventRegistrant').value = event.registrant || '';
+                        
+                        // 画像の表示（Base64データを優先）
+                        if (event.imageBase64) {
+                            document.getElementById('previewImg').src = 'data:image/jpeg;base64,' + event.imageBase64;
+                            document.getElementById('imagePreview').classList.remove('hidden');
+                        } else if (event.imageUrl) {
                             document.getElementById('previewImg').src = event.imageUrl;
                             document.getElementById('imagePreview').classList.remove('hidden');
                         } else {
                             document.getElementById('imagePreview').classList.add('hidden');
+                        }
+                        
+                        // 画像入力フィールドを確実に表示
+                        const imageInput = document.getElementById('eventImage');
+                        if (imageInput) {
+                            imageInput.style.display = 'block';
+                            imageInput.style.visibility = 'visible';
+                        }
+                        const imageUploadSection = document.getElementById('imageUploadSection');
+                        if (imageUploadSection) {
+                            imageUploadSection.style.display = 'block';
                         }
                         
                         document.getElementById('eventModal').classList.remove('hidden');
@@ -393,9 +700,9 @@
                 });
         }
 
-        // イベントをアーカイブ
+        // 体験会をアーカイブ
         function archiveEvent(eventId) {
-            if (!confirm('このイベントをアーカイブしますか？')) return;
+            if (!confirm('この体験会をアーカイブしますか？')) return;
             
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -407,7 +714,7 @@
                 })
             })
             .then(() => {
-                alert('イベントをアーカイブしました。');
+                alert('体験会をアーカイブしました。');
                 loadEvents();
             })
             .catch(error => {
@@ -416,9 +723,9 @@
             });
         }
 
-        // イベントを削除
+        // 体験会を削除
         function deleteEvent(eventId) {
-            if (!confirm('このイベントを削除しますか？この操作は取り消せません。')) return;
+            if (!confirm('この体験会を削除しますか？この操作は取り消せません。')) return;
             
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -430,7 +737,7 @@
                 })
             })
             .then(() => {
-                alert('イベントを削除しました。');
+                alert('体験会を削除しました。');
                 loadEvents();
             })
             .catch(error => {
@@ -446,93 +753,655 @@
             currentEditingEventId = null;
             document.getElementById('eventForm').reset();
             document.getElementById('imagePreview').classList.add('hidden');
+            // 画像入力フィールドを確実に表示
+            const imageInput = document.getElementById('eventImage');
+            if (imageInput) {
+                imageInput.style.display = 'block';
+                imageInput.value = ''; // ファイル選択をリセット
+            }
+            const imageUploadSection = document.getElementById('imageUploadSection');
+            if (imageUploadSection) {
+                imageUploadSection.style.display = 'block';
+            }
         }
 
         document.getElementById('closeModal')?.addEventListener('click', closeModal);
         document.getElementById('cancelBtn')?.addEventListener('click', closeModal);
 
-        // 画像プレビュー
-        document.getElementById('eventImage')?.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('previewImg').src = e.target.result;
-                    document.getElementById('imagePreview').classList.remove('hidden');
+        // 画像プレビューとフォーム送信処理はトリミングモーダルのスクリプト（下記）で処理
+
+        // 体験会を保存
+        function saveEvent(eventData, submitBtn, originalBtnText) {
+            console.log('=== 体験会保存開始 ===');
+            console.log('保存するデータ:', JSON.stringify(eventData, null, 2));
+            console.log('SCRIPT_URL:', SCRIPT_URL);
+            
+            // 画像データの確認
+            console.log('🖼️ 画像データの確認:');
+            console.log('  - imageBase64:', eventData.imageBase64 ? eventData.imageBase64.substring(0, 50) + '... (長さ: ' + eventData.imageBase64.length + ')' : '(空)');
+            console.log('  - imageFileName:', eventData.imageFileName || '(空)');
+            
+            // データの検証
+            if (!eventData.title || !eventData.category || !eventData.date || !eventData.time) {
+                alert('必須項目が入力されていません。\n\nタイトル、カテゴリ、開催日、開催時間を確認してください。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                return;
+            }
+            
+            // 画像データを1つのリクエストで一緒に送信（Gemini推奨方式）
+            // 画像がある場合は、imageBase64とimageFileNameを含めて送信
+            // GAS側で画像をアップロードして、スプレッドシートの9列目にURLを保存する
+            
+            // リクエストボディを確認
+            const requestBody = JSON.stringify(eventData);
+            const requestBodySizeMB = (requestBody.length / 1024 / 1024).toFixed(2);
+            console.log('リクエストボディ:', requestBody.substring(0, 500) + '...'); // 最初の500文字のみ表示
+            console.log('リクエストボディの長さ:', requestBody.length, 'bytes (' + requestBodySizeMB + ' MB)');
+            console.log('画像データを含めて送信:', {
+                hasImage: !!eventData.imageBase64,
+                imageSize: eventData.imageBase64 ? (eventData.imageBase64.length / 1024 / 1024).toFixed(2) + ' MB' : 'なし',
+                imageFileName: eventData.imageFileName || 'なし',
+                imageBase64Key: eventData.imageBase64 ? 'imageBase64 (存在)' : 'imageBase64 (なし)'
+            });
+            
+            // ネットワークタブで確認できるように、リクエストを記録
+            console.group('📤 イベント保存リクエスト');
+            console.log('URL:', SCRIPT_URL);
+            console.log('Method: POST');
+            console.log('Headers:', { 'Content-Type': 'application/json' });
+            console.log('Body:', {
+                ...eventData,
+                imageBase64: eventData.imageBase64 ? eventData.imageBase64.substring(0, 50) + '... (長さ: ' + eventData.imageBase64.length + ')' : '(空)'
+            });
+            console.groupEnd();
+            
+            // リクエスト送信前に最終確認
+            console.log('🚀 リクエスト送信開始（画像含む）');
+            console.log('送信URL:', SCRIPT_URL);
+            console.log('送信データ（画像Base64は省略）:', {
+                ...eventData,
+                imageBase64: eventData.imageBase64 ? '(Base64データ: ' + eventData.imageBase64.length + '文字)' : '(空)'
+            });
+            
+            // 通常のCORSモードで試行（レスポンスを確認できる）
+            // 重要: no-corsモードではGAS側でeがundefinedになり、データを受信できません
+            // 通常のCORSモード（modeを指定しない、または'cors'）で送信してください
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                // modeを指定しない（デフォルトは'cors'）
+                // no-corsモードではGAS側でeがundefinedになるため、使用しない
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: requestBody
+            })
+            .then(response => {
+                console.log('📥 レスポンス受信:', response.status, response.statusText);
+                return response.text().then(text => {
+                    console.log('📥 レスポンス本文:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.warn('レスポンスのJSONパースに失敗:', text);
+                        return { status: 'unknown', raw: text };
+                    }
+                });
+            })
+            .then(data => {
+                console.log('📥 パース済みレスポンス:', data);
+                if (data.status === 'success') {
+                    console.log('✅ イベント保存成功！');
+                    console.log('✅ イベントID:', data.eventId || '(なし)');
+                    console.log('✅ 画像URL:', data.imageUrl || '(なし)');
+                    
+                    // 画像は既にGAS側でアップロード済み（1つのリクエストで処理）
+                    if (eventData.imageBase64 && !data.imageUrl) {
+                        console.warn('⚠️ 画像を送信しましたが、レスポンスにimageUrlが含まれていません');
+                        console.warn('⚠️ GASの実行ログを確認して、画像アップロードが成功したか確認してください');
+                    }
+                    
+                    alert('体験会を保存しました。' + (eventData.imageBase64 ? '\n\n画像も一緒にアップロードしました。' : ''));
+                    closeModal();
+                    loadEvents();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                } else {
+                    console.error('❌ 保存失敗:', data.message || data);
+                    alert('保存に失敗しました。\n\nエラー: ' + (data.message || JSON.stringify(data)) + '\n\nブラウザのコンソール（F12）とGoogle Apps Scriptの実行ログを確認してください。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            })
+            .catch(error => {
+                console.error('❌ リクエスト送信エラー:', error);
+                console.error('エラー詳細:', error);
+                // CORSエラーの場合はno-corsモードで再試行
+                if (error.name === 'TypeError' || error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
+                    console.log('⚠️ CORSエラーが発生したため、no-corsモードで再試行します');
+                    console.log('📤 no-corsモードで送信するデータ（画像Base64は省略）:', {
+                        ...eventData,
+                        imageBase64: eventData.imageBase64 ? '(Base64データ: ' + eventData.imageBase64.length + '文字)' : '(空)'
+                    });
+                    console.log('📤 リクエストボディの長さ:', requestBody.length, 'bytes (' + (requestBody.length / 1024 / 1024).toFixed(2) + ' MB)');
+                    console.log('📤 画像データを含めて送信:', {
+                        hasImage: !!eventData.imageBase64,
+                        imageSize: eventData.imageBase64 ? (eventData.imageBase64.length / 1024 / 1024).toFixed(2) + ' MB' : 'なし'
+                    });
+                    
+                    // no-corsモードでは、Content-Typeヘッダーが無視される可能性があるため、
+                    // リクエストボディをそのまま送信
+                    // 注意: no-corsモードではレスポンスを取得できませんが、リクエストは送信されます
+                    // 画像も含めて1つのリクエストで送信（GAS側で画像をアップロードしてスプレッドシートに保存）
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        cache: 'no-cache',
+                        credentials: 'omit',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: requestBody
+                    })
+                    .then(() => {
+                        console.log('✅ no-corsモードでリクエスト送信完了');
+                        console.log('⚠️ Google Apps Scriptの実行ログを確認してください');
+                        console.log('⚠️ 特に以下を確認：');
+                        console.log('   1. 「e の存在」が true になっているか');
+                        console.log('   2. 「e.postData.contents」にデータが含まれているか');
+                        console.log('   3. 「params.imageBase64 の存在」が true になっているか');
+                        console.log('   4. 「✅ 画像アップロード成功」が表示されているか');
+                        console.log('   5. 「📝 9列目（画像URL）」にURLが入っているか');
+                        
+                        setTimeout(() => {
+                            console.log('🔄 イベント一覧を再読み込み');
+                            loadEvents();
+                            alert('体験会を保存しました。' + (eventData.imageBase64 ? '\n\n画像も一緒にアップロードしました。' : '') + '\n\n⚠️ 実際に保存されたか確認してください：\n1. Google Apps Scriptの実行ログで「📝 9列目（画像URL）」を確認\n2. スプレッドシートの「イベント一覧」タブの9列目\n3. Google Driveの指定フォルダ\n\nもし保存されていない場合は、GASのデプロイ設定を確認してください。');
+                            closeModal();
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnText;
+                        }, 3000);
+                    })
+                    .catch(noCorsError => {
+                        console.error('❌ no-corsモードでもエラー:', noCorsError);
+                        alert('保存に失敗しました。\n\nブラウザのコンソール（F12）とGoogle Apps Scriptの実行ログを確認してください。\n\n特に以下を確認：\n1. GASの実行ログで「e の存在」が true になっているか\n2. 「e.postData.contents」にデータが含まれているか\n3. 「params.imageBase64 の存在」が true になっているか\n\nエラー: ' + noCorsError.message);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    });
+                } else {
+                    alert('保存に失敗しました。\n\nエラー: ' + error.message + '\n\nブラウザのコンソール（F12）とGoogle Apps Scriptの実行ログを確認してください。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            });
+        }
+    </script>
+
+    <!-- 画像トリミングモーダル -->
+    <div id="cropModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4" style="z-index: 9999;">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto" style="position: relative;">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-brand-main">画像をトリミング</h3>
+                    <button id="closeCropModal" class="text-gray-500 hover:text-gray-700" style="cursor: pointer;">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="mb-4 bg-gray-100 p-4 rounded-lg">
+                    <img id="cropImage" src="" alt="トリミング対象" style="max-width: 100%; display: block;">
+                </div>
+                <div class="flex gap-3 justify-end mt-4" style="position: sticky; bottom: 0; background: white; padding: 1rem 0; margin: 0 -1.5rem -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; border-top: 1px solid #e5e7eb; width: calc(100% + 3rem);">
+                    <button id="cancelCrop" type="button" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-bold" style="cursor: pointer; min-width: 120px;">
+                        <i class="fas fa-times mr-2"></i>キャンセル
+                    </button>
+                    <button id="applyCrop" type="button" class="px-6 py-3 bg-brand-cta text-white rounded-lg hover:bg-orange-600 transition font-bold shadow-md" style="cursor: pointer; min-width: 120px;">
+                        <i class="fas fa-check mr-2"></i>確定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+
+    <script>
+        // グローバルスコープで日時ピッカーを保持
+        let startDateTimePicker = null;
+        let endDateTimePicker = null;
+        let deadlinePicker = null;
+        
+        // DOMContentLoadedイベントで実行（DOMが読み込まれた後に実行）
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Flatpickrで開始日時を初期化（日付と時間を一緒に選択）
+            const eventStartDateTimeInput = document.getElementById('eventStartDateTime');
+            if (eventStartDateTimeInput) {
+                startDateTimePicker = flatpickr(eventStartDateTimeInput, {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
+                    locale: flatpickr.l10ns.ja,
+                    allowInput: false,
+                    clickOpens: true,
+                    minuteIncrement: 15, // 15分刻み
+                    onChange: function(selectedDates, dateStr, instance) {
+                        // 開始日時が変更されたら、終了日時の最小値を更新
+                        if (endDateTimePicker && selectedDates.length > 0) {
+                            endDateTimePicker.set('minDate', selectedDates[0]);
+                        }
+                        // 開始日時から日付を抽出して、eventDateとeventStartTimeに設定
+                        if (selectedDates.length > 0) {
+                            const date = selectedDates[0];
+                            const dateStr = date.getFullYear() + '-' + 
+                                          String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                                          String(date.getDate()).padStart(2, '0');
+                            const timeStr = String(date.getHours()).padStart(2, '0') + ':' + 
+                                          String(date.getMinutes()).padStart(2, '0');
+                            document.getElementById('eventDate').value = dateStr;
+                            document.getElementById('eventStartTime').value = timeStr;
+                        }
+                    }
+                });
+                console.log('✅ Flatpickr開始日時を初期化しました');
+            }
+            
+            // Flatpickrで終了日時を初期化（日付と時間を一緒に選択）
+            const eventEndDateTimeInput = document.getElementById('eventEndDateTime');
+            if (eventEndDateTimeInput) {
+                endDateTimePicker = flatpickr(eventEndDateTimeInput, {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
+                    locale: flatpickr.l10ns.ja,
+                    allowInput: false,
+                    clickOpens: true,
+                    minuteIncrement: 15, // 15分刻み
+                    onChange: function(selectedDates, dateStr, instance) {
+                        // 終了日時から日付を抽出して、eventEndTimeに設定
+                        if (selectedDates.length > 0) {
+                            const date = selectedDates[0];
+                            const timeStr = String(date.getHours()).padStart(2, '0') + ':' + 
+                                          String(date.getMinutes()).padStart(2, '0');
+                            document.getElementById('eventEndTime').value = timeStr;
+                        }
+                    }
+                });
+                console.log('✅ Flatpickr終了日時を初期化しました');
+            }
+            
+            console.log('✅ DOMContentLoaded: トリミング機能の初期化開始');
+            
+            let cropper = null;
+            let originalImageFile = null;
+
+            // 画像選択時の処理を変更
+            const eventImageInput = document.getElementById('eventImage');
+            if (!eventImageInput) {
+                console.error('❌ eventImage要素が見つかりません');
+                return;
+            }
+            console.log('✅ eventImage要素を取得しました');
+
+            eventImageInput.addEventListener('change', function(e) {
+                console.log('🖼️ 画像ファイルが選択されました');
+                const file = e.target.files[0];
+                if (file) {
+                    console.log('📁 ファイル情報:', file.name, file.size, 'bytes', file.type);
+                    originalImageFile = file;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        console.log('✅ ファイル読み込み完了');
+                        // トリミングモーダルを表示
+                        const cropImage = document.getElementById('cropImage');
+                        const cropModal = document.getElementById('cropModal');
+                        
+                        if (!cropImage) {
+                            console.error('❌ cropImage要素が見つかりません');
+                            return;
+                        }
+                        if (!cropModal) {
+                            console.error('❌ cropModal要素が見つかりません');
+                            return;
+                        }
+                        
+                        cropImage.src = e.target.result;
+                        cropModal.classList.remove('hidden');
+                        console.log('✅ トリミングモーダルを表示しました');
+                        
+                        // Cropper.jsを初期化
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        
+                        // Cropper.jsが読み込まれているか確認
+                        if (typeof Cropper === 'undefined') {
+                            console.error('❌ Cropper.jsが読み込まれていません');
+                            alert('画像トリミング機能の読み込みに失敗しました。ページを再読み込みしてください。');
+                            return;
+                        }
+                        
+                        console.log('🔄 Cropper.jsを初期化します');
+                        cropper = new Cropper(cropImage, {
+                        aspectRatio: 16 / 9, // アスペクト比を16:9に設定（必要に応じて変更可能）
+                        viewMode: 1,
+                        dragMode: 'move',
+                        autoCropArea: 1.0, // デフォルトで画像全体を選択
+                        restore: false,
+                        guides: true,
+                        center: true,
+                        highlight: false,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleable: false,
+                        minCropBoxWidth: 200,
+                        minCropBoxHeight: 112,
+                        responsive: true,
+                        background: true,
+                        modal: true,
+                        ready: function() {
+                            console.log('✅ Cropper.js初期化完了');
+                            // デフォルトで画像全体を選択（アスペクト比を維持しながら最大サイズ）
+                            const imageData = cropper.getImageData();
+                            const containerData = cropper.getContainerData();
+                            const cropBoxData = cropper.getCropBoxData();
+                            
+                            // 画像全体をカバーするようにトリミング枠を設定
+                            cropper.setCropBoxData({
+                                left: 0,
+                                top: 0,
+                                width: Math.min(imageData.naturalWidth, containerData.width),
+                                height: Math.min(imageData.naturalHeight, containerData.height)
+                            });
+                            console.log('📏 トリミングエリアをフルサイズに設定しました');
+                        }
+                    });
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // フォーム送信
-        document.getElementById('eventForm')?.addEventListener('submit', function(e) {
+            // トリミング適用
+            const applyCropBtn = document.getElementById('applyCrop');
+            if (!applyCropBtn) {
+                console.error('❌ applyCropボタンが見つかりません');
+            } else {
+                console.log('✅ applyCropボタンを取得しました');
+                applyCropBtn.addEventListener('click', function() {
+                    console.log('🖱️ 確定ボタンがクリックされました');
+                    if (cropper) {
+                        const canvas = cropper.getCroppedCanvas({
+                            width: 800,  // 出力サイズ（必要に応じて調整）
+                            height: 450,
+                            imageSmoothingEnabled: true,
+                            imageSmoothingQuality: 'high'
+                        });
+                        
+                        if (canvas) {
+                            // CanvasをBase64に変換
+                            const base64Data = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+                            
+                            // プレビューを更新
+                            document.getElementById('previewImg').src = canvas.toDataURL('image/jpeg', 0.9);
+                            document.getElementById('imagePreview').classList.remove('hidden');
+                            
+                            // トリミング後の画像データを保存（後でフォーム送信時に使用）
+                            document.getElementById('eventImage').dataset.croppedBase64 = base64Data;
+                            
+                            // 元の画像ファイル情報も保存（範囲修正時に使用）
+                            if (originalImageFile) {
+                                // 元の画像ファイルをBlobとして保存（範囲修正時に再読み込み用）
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    document.getElementById('eventImage').dataset.originalImageData = e.target.result;
+                                };
+                                reader.readAsDataURL(originalImageFile);
+                            }
+                            
+                            // 元の画像ファイルも保存（範囲修正時に使用）
+                            if (originalImageFile) {
+                                document.getElementById('eventImage').dataset.originalFile = JSON.stringify({
+                                    name: originalImageFile.name,
+                                    type: originalImageFile.type,
+                                    size: originalImageFile.size
+                                });
+                            }
+                            
+                            console.log('✅ 画像トリミング完了');
+                            console.log('📏 トリミング後のサイズ:', canvas.width, 'x', canvas.height);
+                            console.log('📦 Base64データの長さ:', base64Data.length);
+                            
+                            // モーダルを閉じる
+                            document.getElementById('cropModal').classList.add('hidden');
+                            if (cropper) {
+                                cropper.destroy();
+                                cropper = null;
+                            }
+                        } else {
+                            console.error('❌ Canvasの取得に失敗しました');
+                            alert('画像のトリミングに失敗しました。');
+                        }
+                    } else {
+                        console.error('❌ Cropperが初期化されていません');
+                        alert('画像トリミング機能が初期化されていません。ページを再読み込みしてください。');
+                    }
+                });
+            }
+
+            // トリミングキャンセル
+            const cancelCropBtn = document.getElementById('cancelCrop');
+            if (cancelCropBtn) {
+                cancelCropBtn.addEventListener('click', function() {
+                    console.log('🖱️ キャンセルボタンがクリックされました');
+                    document.getElementById('cropModal').classList.add('hidden');
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                    // ファイル選択をリセット
+                    document.getElementById('eventImage').value = '';
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    originalImageFile = null;
+                });
+            }
+
+            // モーダルを閉じる
+            const closeCropModalBtn = document.getElementById('closeCropModal');
+            if (closeCropModalBtn) {
+                closeCropModalBtn.addEventListener('click', function() {
+                    console.log('🖱️ 閉じるボタンがクリックされました');
+                    document.getElementById('cropModal').classList.add('hidden');
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                    // ファイル選択をリセット
+                    document.getElementById('eventImage').value = '';
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    originalImageFile = null;
+                });
+            }
+
+            // 範囲を修正するボタン
+            const reCropBtn = document.getElementById('reCropBtn');
+            if (reCropBtn) {
+                console.log('✅ reCropBtnボタンを取得しました');
+                reCropBtn.addEventListener('click', function() {
+                    console.log('🖱️ 範囲を修正するボタンがクリックされました');
+                    
+                    // 保存されている元の画像データを取得
+                    const originalImageData = document.getElementById('eventImage').dataset.originalImageData;
+                    const imageFile = document.getElementById('eventImage').files[0];
+                    
+                    let imageSource = null;
+                    
+                    if (originalImageData) {
+                        // 保存されている元の画像データを使用
+                        imageSource = originalImageData;
+                        console.log('📁 保存されている元の画像データを使用');
+                    } else if (imageFile) {
+                        // 元の画像ファイルを再読み込み
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            openCropModal(e.target.result);
+                        };
+                        reader.readAsDataURL(imageFile);
+                        return;
+                    } else {
+                        alert('元の画像が見つかりません。画像を再度選択してください。');
+                        return;
+                    }
+                    
+                    if (imageSource) {
+                        openCropModal(imageSource);
+                    }
+                });
+            } else {
+                console.warn('⚠️ reCropBtnボタンが見つかりません');
+            }
+            
+            // トリミングモーダルを開く関数
+            function openCropModal(imageDataUrl) {
+                const cropImage = document.getElementById('cropImage');
+                const cropModal = document.getElementById('cropModal');
+                
+                cropImage.src = imageDataUrl;
+                cropModal.classList.remove('hidden');
+                console.log('✅ トリミングモーダルを表示しました（範囲修正）');
+                
+                // Cropper.jsを再初期化
+                if (cropper) {
+                    cropper.destroy();
+                }
+                
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 16 / 9,
+                    viewMode: 1,
+                    dragMode: 'move',
+                    autoCropArea: 1.0, // デフォルトで画像全体を選択
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleable: false,
+                    minCropBoxWidth: 200,
+                    minCropBoxHeight: 112,
+                    responsive: true,
+                    background: true,
+                    modal: true,
+                    ready: function() {
+                        console.log('✅ Cropper.js再初期化完了（範囲修正）');
+                        // デフォルトで画像全体を選択
+                        const imageData = cropper.getImageData();
+                        const containerData = cropper.getContainerData();
+                        cropper.setCropBoxData({
+                            left: 0,
+                            top: 0,
+                            width: Math.min(imageData.naturalWidth, containerData.width),
+                            height: Math.min(imageData.naturalHeight, containerData.height)
+                        });
+                    }
+                });
+            }
+
+        // フォーム送信時の処理を修正（トリミング後の画像を使用）
+        const originalFormSubmit = document.getElementById('eventForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const imageFile = document.getElementById('eventImage').files[0];
+            const croppedBase64 = document.getElementById('eventImage').dataset.croppedBase64;
+            
+            // 開始日時と終了日時から日付と時間を抽出
+            const startDateTimeStr = document.getElementById('eventStartDateTime').value;
+            const endDateTimeStr = document.getElementById('eventEndDateTime').value;
+            
+            let eventDate = '';
+            let startTime = '';
+            let endTime = '';
+            
+            if (startDateTimeStr) {
+                const startParts = startDateTimeStr.split(' ');
+                if (startParts.length === 2) {
+                    eventDate = startParts[0];
+                    startTime = startParts[1];
+                }
+            }
+            
+            if (endDateTimeStr) {
+                const endParts = endDateTimeStr.split(' ');
+                if (endParts.length === 2) {
+                    endTime = endParts[1];
+                }
+            }
+            
+            // フォールバック: 非表示フィールドから取得
+            if (!eventDate) eventDate = document.getElementById('eventDate').value;
+            if (!startTime) startTime = document.getElementById('eventStartTime').value;
+            if (!endTime) endTime = document.getElementById('eventEndTime').value;
+            
             const eventData = {
                 action: currentEditingEventId ? 'updateEvent' : 'createEvent',
                 eventId: currentEditingEventId,
                 title: document.getElementById('eventTitle').value,
                 category: document.getElementById('eventCategory').value,
                 description: document.getElementById('eventDescription').value,
-                date: document.getElementById('eventDate').value,
-                startTime: document.getElementById('eventStartTime').value,
-                endTime: document.getElementById('eventEndTime').value,
+                date: eventDate,
+                startTime: startTime,
+                endTime: endTime,
+                time: startTime + '-' + endTime,
                 capacity: parseInt(document.getElementById('eventCapacity').value),
-                currentParticipants: parseInt(document.getElementById('eventCurrentParticipants').value) || 0
+                currentParticipants: parseInt(document.getElementById('eventCurrentParticipants').value) || 0,
+                venue: document.getElementById('eventVenue').value,
+                fee: document.getElementById('eventFee').value,
+                items: document.getElementById('eventItems').value,
+                registrant: document.getElementById('eventRegistrant').value
             };
-
-            // 時間を結合
-            eventData.time = eventData.startTime + '-' + eventData.endTime;
+            
+            // デバッグ：送信前のデータを確認
+            console.log('=== 📝 フォーム送信前のデータ確認 ===');
+            console.log('eventData:', eventData);
+            console.log('画像ファイル:', imageFile ? imageFile.name + ' (' + imageFile.size + ' bytes)' : 'なし');
+            console.log('トリミング後のBase64データ:', croppedBase64 ? croppedBase64.substring(0, 50) + '... (長さ: ' + croppedBase64.length + ')' : 'なし');
 
             const submitBtn = document.getElementById('submitBtn');
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 保存中...';
 
-            // 画像がある場合はBase64エンコードして一緒に送信
-            if (imageFile) {
+            // トリミング後の画像がある場合はそれを使用、なければ元の画像を使用
+            if (croppedBase64) {
+                console.log('🖼️ トリミング後の画像を使用');
+                eventData.imageBase64 = croppedBase64;
+                eventData.imageFileName = imageFile ? imageFile.name : 'cropped_image.jpg';
+                saveEvent(eventData, submitBtn, originalBtnText);
+            } else if (imageFile) {
+                console.log('🖼️ 元の画像を使用（トリミングなし）');
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const base64Data = e.target.result.split(',')[1]; // data:image/jpeg;base64, の部分を除去
+                    console.log('🖼️ 画像ファイル読み込み完了');
+                    const base64Data = e.target.result.split(',')[1];
+                    console.log('🖼️ Base64データの長さ:', base64Data ? base64Data.length : 0);
                     eventData.imageBase64 = base64Data;
                     eventData.imageFileName = imageFile.name;
                     saveEvent(eventData, submitBtn, originalBtnText);
                 };
-                reader.onerror = function() {
+                reader.onerror = function(error) {
+                    console.error('❌ 画像読み込みエラー:', error);
                     alert('画像の読み込みに失敗しました。');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnText;
                 };
                 reader.readAsDataURL(imageFile);
             } else {
-                // 画像がない場合は直接保存
+                console.log('ℹ️ 画像ファイルなし');
                 saveEvent(eventData, submitBtn, originalBtnText);
             }
-        });
-
-        // イベントを保存
-        function saveEvent(eventData, submitBtn, originalBtnText) {
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(eventData)
-            })
-            .then(() => {
-                alert('イベントを保存しました。');
-                closeModal();
-                loadEvents();
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('保存に失敗しました。');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
             });
-        }
+        }); // DOMContentLoaded終了
     </script>
 
     <!-- フッター -->

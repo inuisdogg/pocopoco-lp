@@ -54,3 +54,14 @@ details .animate-fadeIn {
 html {
     scroll-behavior: smooth;
 }
+
+/* Fallback for brand colors if Tailwind config isn't loaded */
+.bg-brand-main { background-color: #8B5A2B !important; }
+.text-brand-main { color: #8B5A2B !important; }
+.border-brand-main { border-color: #8B5A2B !important; }
+.bg-brand-cta { background-color: #FF8F00 !important; }
+.text-brand-cta { color: #FF8F00 !important; }
+.border-brand-cta { border-color: #FF8F00 !important; }
+.bg-brand-accent { background-color: #7CB342 !important; }
+.text-brand-accent { color: #7CB342 !important; }
+.hover\:bg-orange-600:hover { background-color: #EA580C !important; }
