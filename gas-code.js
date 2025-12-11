@@ -552,7 +552,7 @@ function doPost(e) {
           userEmailBody += "【ご連絡について】\n";
           userEmailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
           userEmailBody += "お申し込みいただき、誠にありがとうございます。\n";
-          userEmailBody += "内容を確認させていただき、後日担当者からご連絡します。\n";
+          userEmailBody += "内容を確認させていただき、後日担当者よりご連絡します。\n";
           userEmailBody += "今しばらくお待ちください。\n\n";
           
           userEmailBody += getEmailSignature();
