@@ -113,9 +113,9 @@
                     </div>
                 </div>
 
-                <!-- カレンダー選択エリア（見学・面談希望の場合のみ表示） -->
-                <div id="calendarSection" class="hidden">
-                    <label class="block text-sm font-bold text-gray-700 mb-3">ご希望の日時を選択 <span class="text-red-500 text-xs">*必須</span></label>
+                <!-- カレンダー選択エリア（常に表示） -->
+                <div id="calendarSection">
+                    <label class="block text-sm font-bold text-gray-700 mb-3">ご希望の日時を選択 <span class="text-gray-400 text-xs">(任意)</span></label>
                     
                     <!-- カレンダー -->
                     <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4">
@@ -142,7 +142,7 @@
 
                     <!-- 時間帯選択 -->
                     <div id="timeSlotSection" class="hidden">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">時間帯を選択 <span class="text-red-500 text-xs">*必須</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">時間帯を選択 <span class="text-gray-400 text-xs">(任意)</span></label>
                         <div id="selectedDate" class="text-sm text-gray-600 mb-3"></div>
                         <div id="timeSlots" class="grid grid-cols-2 gap-2"></div>
                     </div>
@@ -213,7 +213,7 @@
     <script>
         // 【重要】ここにGASのウェブアプリURLを貼り付けてください
         // 例: const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxVT5qV4GA3OHhamceSF5SSu84vJTUNFChZ_X9XELGUfwWiEoHJYMIW7MlxBop8Cdx/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxF3QXoAfDH4EuGgQZMsmhPZMoIHcesFXTV3RD1nj7oMWjmr7RL53jCB_JBMbRqDhpk/exec"; 
 
         // DOMContentLoadedで初期化
         document.addEventListener('DOMContentLoaded', function() {
@@ -559,53 +559,9 @@
 
             // 初期化時に選択日時リストを描画
             renderSelectedDateTimes();
-
-            // 見学・面談希望のチェックボックス変更時の処理
-            function checkCalendarVisibility() {
-                const visitCheckbox = document.getElementById('typeVisit');
-                const consultationCheckbox = document.getElementById('typeConsultation');
-                const calendarSection = document.getElementById('calendarSection');
-                
-                if (!visitCheckbox || !consultationCheckbox || !calendarSection) {
-                    console.error('必要なDOM要素が見つかりません');
-                    return;
-                }
-                
-                const visitChecked = visitCheckbox.checked;
-                const consultationChecked = consultationCheckbox.checked;
-                
-                console.log('カレンダー表示チェック:', { visitChecked, consultationChecked });
-                
-                if (visitChecked || consultationChecked) {
-                    calendarSection.classList.remove('hidden');
-                    console.log('カレンダーを表示します');
-                    renderCalendar();
-                    renderSelectedDateTimes();
-                } else {
-                    calendarSection.classList.add('hidden');
-                    selectedDate = null;
-                    selectedTimeSlot = null;
-                    selectedDateTimes = [];
-                    renderSelectedDateTimes();
-                }
-            }
-
-            const typeVisitCheckbox = document.getElementById('typeVisit');
-            const typeConsultationCheckbox = document.getElementById('typeConsultation');
             
-            if (typeVisitCheckbox) {
-                typeVisitCheckbox.addEventListener('change', checkCalendarVisibility);
-                console.log('typeVisit イベントリスナーを設定しました');
-            } else {
-                console.error('typeVisit 要素が見つかりません');
-            }
-            
-            if (typeConsultationCheckbox) {
-                typeConsultationCheckbox.addEventListener('change', checkCalendarVisibility);
-                console.log('typeConsultation イベントリスナーを設定しました');
-            } else {
-                console.error('typeConsultation 要素が見つかりません');
-            }
+            // カレンダーを初期表示
+            renderCalendar();
 
             const form = document.getElementById('reservationForm');
             
@@ -619,13 +575,7 @@
                         return;
                     }
 
-                    // 見学・面談希望が選択されている場合、候補日時をチェック
-                    const visitChecked = document.getElementById('typeVisit')?.checked || false;
-                    const consultationChecked = document.getElementById('typeConsultation')?.checked || false;
-                    if ((visitChecked || consultationChecked) && selectedDateTimes.length === 0) {
-                        alert('ご希望の候補日時を少なくとも1つ選択してください。');
-                        return;
-                    }
+                    // 候補日時は任意入力のため、バリデーションは行わない
 
                     const submitBtn = document.getElementById('submitBtn');
                     const originalBtnText = submitBtn.innerHTML;

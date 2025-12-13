@@ -39,26 +39,16 @@ const FROM_NAME = "児童発達支援 pocopoco";
 
 // メール署名（すべての申し込み完了メールに共通）
 function getEmailSignature() {
-  var signature = "\n\n";
+  var signature = "\n";
   signature += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
   signature += "株式会社INU\n";
   signature += "info@inu.co.jp\n";
   signature += "042-306-7126\n";
   signature += "ホームページ: https://inu.co.jp\n";
-  signature += "\n";
   signature += "公式LINE: https://lin.ee/83hUaLY\n";
   signature += "Instagram: https://www.instagram.com/pocopoco_fuchu/\n";
-  signature += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
   return signature;
 }
-
-// SNS案内テキスト（すべての申し込み完了メールに共通）
-function getSNSContactInfo() {
-  var info = "\n";
-  info += "【ご連絡・お問い合わせについて】\n\n";
-  info += "お問い合わせ、内容変更のご連絡はLINEからお願いします。\n";
-  return info;
-} 
 
 // ===========================================================
 // GETリクエスト処理（イベント取得用）
@@ -549,11 +539,8 @@ function doPost(e) {
           }
           
           userEmailBody += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-          userEmailBody += "【ご連絡について】\n";
-          userEmailBody += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-          userEmailBody += "お申し込みいただき、誠にありがとうございます。\n";
-          userEmailBody += "内容を確認させていただき、後日担当者よりご連絡します。\n";
-          userEmailBody += "今しばらくお待ちください。\n\n";
+          userEmailBody += "【ご連絡・お問い合わせについて】\n";
+          userEmailBody += "担当者からご連絡させていただきます。内容変更の場合はお手数ですがLINEよりお名前を添えてご連絡ください。\n";
           
           userEmailBody += getEmailSignature();
           
@@ -661,7 +648,10 @@ function doPost(e) {
             userEmailBody += params.message + "\n";
           }
           
-          userEmailBody += getSNSContactInfo();
+          userEmailBody += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+          userEmailBody += "【ご連絡・お問い合わせについて】\n";
+          userEmailBody += "選考結果については１週間以内に担当者よりご連絡いたします。\n";
+          
           userEmailBody += getEmailSignature();
           
           sendEmailWithFrom(
@@ -858,7 +848,10 @@ function doPost(e) {
             userEmailBody += params.message + "\n";
           }
           
-          userEmailBody += getSNSContactInfo();
+          userEmailBody += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+          userEmailBody += "【ご連絡・お問い合わせについて】\n";
+          userEmailBody += "お問い合わせ、内容変更の場合はお手数ですがLINEよりお名前を添えてご連絡ください。\n";
+          
           userEmailBody += getEmailSignature();
           
           sendEmailWithFrom(
